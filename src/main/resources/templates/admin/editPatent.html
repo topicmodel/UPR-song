@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin/adminHeader::html('编辑专利')" ></head>
+<body>
+<div th:replace="include/admin/adminNavigator::html" ></div>
+<script>
+    $(function(){
+        var data4Vue = {
+            uri: 'patents',
+            listURL:'admin_patent_list',
+            bean: ''
+        };
+
+        //ViewModel
+        var vue = new Vue({
+            el: '#workingArea',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                this.get();
+            },
+            methods: {
+                get:function(){
+                    var id = getUrlParms("id");
+                    var url = this.uri+"/"+id;
+                    axios.get(url).then(function(response) {
+                        vue.bean = response.data;
+                        console.log("bean:"+vue.bean);
+                    })
+                },
+                update:function () {
+//                    if(!checkEmpty(this.bean.patentTitle, "标题"))
+//                        return;
+//                    if(!checkEmpty(this.bean.applyNum, "申请号"))
+//                        return;
+//                    if(!checkEmpty(this.bean.applyPerson, "申请人"))
+//                        return;
+//                    if(!checkEmpty(this.bean.patentInventor, "发明人"))
+//                        return;
+                    var url = this.uri+"/"+this.bean.id;
+                    console.log("patentInventor:"+this.bean.patentInventor);
+/*                    //axios.js 上传文件要用 formData 这种方式
+                    var formData = new FormData();
+//                    formData.append("image", this.file);
+                    formData.append("patentTitle", this.bean.patentTitle);
+                    formData.append("applyNum", this.bean.applyNum);
+                    formData.append("applyPerson", this.bean.applyPerson);
+                    formData.append("patentInventor", this.bean.patentInventor);
+                    console.log("formData:"+formData);*/
+                    console.log("bean:"+vue.bean.applyPerson);
+                    axios.put(url,vue.bean).then(function(response){
+
+                        location.href=vue.listURL;
+                    });
+                },
+                getFile: function (event) {
+                    this.file = event.target.files[0];
+                }
+            }
+        });
+    });
+</script>
+
+<div id="workingArea">
+
+    <ol class="breadcrumb">
+        <li><a href="admin_patent_list">所有专利</a></li>
+        <li class="active">编辑专利</li>
+    </ol>
+
+    <div class="panel panel-warning editDiv">
+        <div class="panel-heading">编辑专利</div>
+        <div class="panel-body">
+            <table class="editTable">
+                <tr>
+                    <td>标题</td>
+                    <td><input  @keyup.enter="update" v-model.trim="bean.patentTitle" type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>申请号</td>
+                    <td><input  @keyup.enter="update" v-model.trim="bean.applyNum" type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>申请人</td>
+                    <td><input  @keyup.enter="update" v-model.trim="bean.applyPerson" type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>发明人</td>
+                    <td><input  @keyup.enter="update" v-model.trim="bean.patentInventor" type="text" class="form-control"></td>
+                </tr>
+
+                <tr class="submitTR">
+                    <td colspan="2" align="center">
+                        <input type="hidden" name="id"   v-model.trim="bean.id" >
+                        <a href="#nowhere" class="btn btn-success" @click="update">提 交</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:replace="include/admin/adminFooter::html" ></div>
+</body>
+</html>
+
+
+
+
+
+

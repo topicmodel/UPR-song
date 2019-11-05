@@ -1,0 +1,104 @@
+<html>
+	<head>
+		<script src="js/jquery/2.0.0/jquery.min.js"></script>
+	    <link href="css/bootstrap/3.3.6/bootstrap.min.css" rel="stylesheet">
+	    <script src="js/bootstrap/3.3.6/bootstrap.min.js"></script>
+	    <script src="js/vue/2.5.16/vue.min.js"></script>
+	    <script src="js/axios/0.17.1/axios.min.js"></script>
+	    <script src="js/moment/2.22.2/moment.js"></script>
+	    <script src="js/echarts.min.js"></script>
+	    <link href="css/fore/style.css" rel="stylesheet">	
+	</head>
+ <body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="width: 800px;height:450px;"></div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        //数据加载完之前先显示一段简单的loading动画
+        myChart.showLoading();
+        
+        var values=[];    //纵坐标数组（实际用来盛放Y坐标值）
+        
+        $.ajax({
+            type : "post",
+            async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url : "getAssess?pid=968",    //请求发送到dataActiont处
+            data : {},
+            dataType : "json",        //返回数据形式为json
+            success : function(result) {
+            	console.log(result);
+                //请求成功时执行该函数内容，result即为服务器返回的json对象
+                if (result) {
+                    for(var i=1;i<result.length-1;i++){
+                        values.push(result[i]);
+                    }
+                    
+                    values.push(result.marketapply+"");
+                    values.push(result.applyscale+"");
+                    values.push(result.marketshare+"");
+                    values.push(result.compete+"");
+                    values.push(result.policyapply+"");
+                    values.push(result.need+"");
+                    values.push(result.ability+"");
+                    console.log(values);
+                    
+                    
+                    myChart.hideLoading();    //隐藏加载动画
+                    
+                    myChart.setOption({        //加载数据图表
+                        title:{
+                        	text:'经济价值度'
+                        },
+                    	tooltip: {},
+                        legend: {
+                            data:['经济价值度']
+                        },
+                        radar: {
+                            // shape: 'circle',
+                            name: {
+                                textStyle: {
+                                    color: '#fff',
+                                    backgroundColor: '#999',
+                                    borderRadius: 5,
+                                    padding: [3, 5]
+                               }
+                            },
+                            indicator: [
+                               { name: '市场应用情况', max: 100},
+                               { name: '专利申请规模', max: 100},
+                               { name: '专利占有率', max: 100},
+                               { name: '竞争情况', max: 100},
+                               { name: '政策适应性', max: 100},
+                               { name: '专利供需情况', max: 100},
+                               { name: '专利权人能力', max: 100}
+                            ]
+                        },
+                        series: [{
+                            name: '价值度（Assess）',
+                            type: 'radar',
+                            // areaStyle: {normal: {}},
+                            data : [
+                                {
+                                    value : values,
+                                    name : '基本指标'
+                                }
+                            ]
+                        }]
+                        
+                        
+                    });
+                }
+            },
+            error : function(errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        });//end ajax
+    });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin/adminHeader::html('信息管理')" ></head>
+<body>
+<div th:replace="include/admin/adminNavigator::html" ></div>
+<script>
+    $(function(){
+        var infocid = getUrlParms("infocid");
+        var data4Vue = {
+            uri:'informations',
+            beans: [],
+            bean:{id: 0, title: '',contentDesc:'',infoCategory:{id:0}},
+            pagination:{},
+            infocategory:''
+        };
+
+        //ViewModel
+        var vue = new Vue({
+            el: '#workingArea',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                this.list(0);
+                this.getInfoCategory(infocid);
+            },
+            methods: {
+                getInfoCategory:function(infocid){
+                    var url = "infocategories/"+infocid;
+                    axios.get(url).then(function(response) {
+                        vue.infocategory = response.data;
+                    })
+                },
+                list:function(start){
+                    var url =  "infocategories/"+infocid+"/"+this.uri+"?start="+start;
+                    axios.get(url).then(function(response) {
+                        vue.pagination = response.data;
+                        vue.beans = response.data.content	;
+                    });
+                },
+                add: function () {
+                	
+                    if(!checkEmpty(this.bean.title, "标题"))
+                        return;         
+                    if (!checkEmpty(this.bean.contentDesc, "主要内容"))
+                        return;
+                    
+                    var url = this.uri;
+                    this.bean.infoCategory.id=infocid;
+                    axios.post(url,this.bean).then(function(response){
+                        vue.list(0);
+                        vue.bean =  {id:0,title:'','contentDesc':'',infoCategory:{'id':0}};
+                    });
+                },
+                deleteBean: function (id) {
+                    if(!checkDeleteLink())
+                        return;
+                    var url = this.uri+"/"+id;
+                    axios.delete(url).then(function(response){
+                        if(0!=response.data.length)
+                            alert(response.data);
+                        else
+                            vue.list(0);
+                    });
+                },
+                jump: function(page){
+                    jump(page,vue); //定义在adminHeader.html 中
+                },
+                jumpByNumber: function(start){
+                    jumpByNumber(start,vue);
+                }
+            }
+
+        });
+    });
+
+</script>
+
+<div id="workingArea" >
+    <ol class="breadcrumb">
+        <li><a href="admin_infocategory_list">所有分类</a></li>
+        <li><a :href="'admin_information_list?infocid='+infocategory.id">{{infocategory.name}}</a></li>
+        <li class="active">信息管理</li>
+    </ol>
+
+    <div class="listDataTableDiv">
+        <table class="table table-striped table-bordered table-hover table-condensed">
+            <thead>
+            <tr class="success">
+                <th>ID</th>
+				<th>标题</th>
+				<th>详情</th>
+				<th>图片管理</th>
+                <th>编辑</th>
+                <th>删除</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="bean in beans ">
+                <td>{{bean.id}}</td>
+                <td>{{bean.title}}</td>
+                <td>{{bean.contentDesc | subStringFilter(0,20)}}</td>
+                <td>
+                    <a :href="'admin_informationImage_list?infoid=' + bean.id "><span class="glyphicon glyphicon-picture"></span></a>
+                </td>
+                <td>
+                    <a :href="'admin_information_edit?id=' + bean.id "><span class="glyphicon glyphicon-edit"></span></a>
+                </td> 
+                
+                <td>
+                    <a href="#nowhere"  @click="deleteBean(bean.id)"><span class="   glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="include/admin/adminPage::html" ></div>
+	
+	<!-- 新增信息 -->
+	<div class="panel panel-warning addDiv">
+        <div class="panel-heading">新增信息</div>
+        <div class="panel-body">
+            <table class="addTable">
+                <tr>
+                    <td>标题</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.title" type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>主要内容</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.contentDesc"  type="text"
+                                class="form-control"></td>
+                </tr>
+ 
+                <tr class="submitTR">
+                    <td colspan="2" align="center">
+                        <a href="#nowhere"  @click="add" class="btn btn-success">提交</a>
+                    </td>
+                </tr>
+            </table>
+ 
+        </div>
+    </div>
+</div>
+
+<div th:replace="include/admin/adminFooter::html" ></div>
+</body>
+</html>

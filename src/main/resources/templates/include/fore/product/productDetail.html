@@ -1,0 +1,31 @@
+<div th:fragment="html"> 
+	<div class="productDetailDiv" v-show="showDetail" >
+		<div class="productDetailTopPart">
+			<a href="#nowhere" class="productDetailTopPartSelectedLink selected">专利详情</a>
+			<a href="#nowhere" class="productDetailTopReviewLink" @click="toggle2Review">专利价值度</span> </a>
+		</div>
+
+		<div class="productParamterPart">
+			<div class="productParamter" style="font-size: 15px">专利详览：</div>
+			<div class="productParamterList">
+				<span v-for="pv in pvs" style="font-size: 15px">{{pv.property.name}}: {{pv.value | subStringFilter(0,10)}} </span>
+			</div>
+			<div style="clear:both"></div>
+			
+			<div style="font-size: 15px;font-weight: bold;color: #999;margin: 20px 0 10px 0;">专利说明书：</div>
+			<div>
+				<span><a :href="'file/productAbstract/'+p.id+'.html'" target="blank" style="margin-left: 40px;font-size: 14px;color: black">点击查看详情 >>></a></span>
+			</div>
+			<div style="font-size: 15px;font-weight: bold;color: #999;margin: 20px 0 10px 0;">权利要求书：</div>
+			<div>
+				<span><a :href="'file/productRight/'+p.id+'.html'"  target="blank" style="margin-left: 40px;font-size: 14px;color: black">点击查看详情 >>></a></span>
+			</div>
+			
+		</div>
+		
+		<div class="productDetailImagesPart">
+			<img v-for="pi in p.productDetailImages" :src="'img/productDetail/'+pi.id+'.jpg'">
+		</div>
+	</div>
+</div>
+

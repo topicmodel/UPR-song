@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ 
+<head th:include="include/personal/adminHeader::html('产品管理')" ></head>
+<body>
+<div th:replace="include/personal/adminNavigator::html" ></div>
+<script>
+    $(function(){
+    	var pid = getUrlParms("pid");
+    	var data4Vue={
+    		uri:'productExplain',
+    		singleProductImages:[],
+    		detailProductImages:[],
+    		product:'',
+    		category:'',
+    		singleFile:'',
+    		detailFile:''
+    	};
+    	var vue=new Vue({
+    		el:'#workingArea',
+    		data:data4Vue,
+    		mounted:function(){
+    			this.getProduct(pid);
+    			this.listSingles();
+    			this.listDetails();
+    		},
+    		methods:{
+    			getProduct:function(pid){
+    				var url='products/'+pid;
+    				axios.get(url).then(function(response){
+    					vue.product=response.data;
+    					vue.category=vue.product.category;
+    				});
+    			},
+    			listSingles:function(){
+    				var url="products/"+pid+"/"+this.uri+"?type=abstract";
+    				axios.get(url).then(function(response){
+    					console.log("single:"+response.data);
+    					vue.singleProductImages=response.data;
+    				});
+    			},
+    			listDetails:function(){
+    				var url="products/"+pid+"/"+this.uri+"?type=right";
+    				axios.get(url).then(function(response){
+    					vue.detailProductImages=response.data;
+    				});
+    				
+    			},
+    			addSingle:function(){
+    				if(!checkEmpty(this.singleFile, "单个产品图片"))
+                        return;
+    				var url=this.uri+"?type=abstract&pid="+pid;
+    				var formData=new FormData();
+    				formData.append("file",this.singleFile);
+    				axios.post(url,formData).then(function(response){
+    					alert("上传成功!");
+    					vue.listSingles();
+    					$("#singlePic").val('');
+    					vue.singleFile=null;
+    				});
+    			},
+				addDetail:function(){
+					if(!checkEmpty(this.detailFile, "详情产品图片"))
+                        return;
+    				var url=this.uri+"?type=right&pid="+pid;
+    				var formData=new FormData();
+    				formData.append("file",this.detailFile);
+    				axios.post(url,formData).then(function(response){
+    					alert("上传成功!");
+    					vue.listDetails();
+    					$("#detailPic").val('');
+    					vue.detailFile=null;
+    				});
+    			},
+    			deleteBean:function(id){
+    				if(!checkDeleteLink())
+                        return;
+    				var url=this.uri+"/"+id;
+    				axios.delete(url).then(function(response){
+    					vue.listSingles();
+                        vue.listDetails();
+    				});
+    			},
+    			getSingleFile:function(event){
+    				vue.singleFile=event.target.files[0];
+    			}, 
+				getDetailFile:function(event){
+					vue.detailFile=event.target.files[0];
+    			}
+    		}
+    	});
+    });
+ 
+</script>
+ 
+<div id="workingArea" >
+    <ol class="breadcrumb">
+        <li><a href="personal_category_list">所有分类</a></li>
+        <li><a :href="'personal_product_list?cid='+category.id">{{category.name}}</a></li>
+        <li class="active">{{product.name}}</li>
+        <li class="active">专利说明管理</li>
+    </ol>
+ 
+    <table class="addPictureTable" align="center">
+        <tr>
+            <td class="addPictureTableTD">
+                <div>
+                    <div class="panel panel-warning addPictureDiv">
+                        
+                        <!-- 上传产品主图 -->
+                        <div class="panel-heading">新增<b class="text-primary">专利说明书 </b></div>
+                        <div class="panel-body">
+                            <table class="addTable">
+                               <!--  <tr>
+                                    <td>请选择本地图片 尺寸400X400 为佳</td>
+                                </tr> -->
+                                <tr>
+                                    <td>
+                                        <input id="singlePic" type="file" @change="getSingleFile($event)" name="file" />
+                                    </td>
+                                </tr>
+                                <tr class="submitTR">
+                                    <td align="center">
+                                        <button type="submit" @click="addSingle" class="btn btn-success">提 交</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <table class="table table-striped table-bordered table-hover  table-condensed">
+                        <thead>
+                        <tr class="success">
+                            <th>ID</th>
+                            <th>专利说明书</th>
+                            <th>删除</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="pi in singleProductImages">
+                            <td>{{pi.id}}</td>
+                            <td>
+                                <a title="点击查看源文件" :href="'file/productAbstract/'+product.id+'.html'" target="_blank">点击查看详情</a>
+                            </td>
+                            <td><a href="#nowhere" @click="deleteBean(pi.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
+ 
+                        </tr>
+                        </tbody>
+                    </table>
+ 
+                </div>
+            </td>
+            
+            <!-- 新增详情图 -->
+            <td class="addPictureTableTD">
+                <div>
+ 
+                    <div class="panel panel-warning addPictureDiv">
+                        <div class="panel-heading">新增<b class="text-primary">权利要求书</b></div>
+                        <div class="panel-body">
+                            <table class="addTable">
+                               <!--  <tr>
+                                    <td>请选择本地图片 宽度790  为佳</td>
+                                </tr> -->
+                                <tr>
+                                    <td>
+                                        <input id="detailPic" type="file" @change="getDetailFile($event)" name="file" />
+                                    </td>
+                                </tr>
+                                <tr class="submitTR">
+                                    <td align="center">
+                                        <button type="submit" @click="addDetail" class="btn btn-success">提 交</button>
+                                    </td>
+                                </tr>
+                            </table>
+ 
+                        </div>
+                    </div>
+                    <table class="table table-striped table-bordered table-hover  table-condensed">
+                        <thead>
+                        <tr class="success">
+                            <th>ID</th>
+                            <th>权利要求书</th>
+                            <th>删除</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="pi in detailProductImages">
+                            <td>{{pi.id}}</td>
+                            <td>
+                                <a title="点击查看原图" :href="'file/productRight/'+product.id+'.html'" target="_blank">点击查看详情</a>
+                            </td>
+                            <td><a href="#nowhere" @click="deleteBean(pi.id)"><span class="glyphicon glyphicon-trash"></span></a></td>
+ 
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+ 
+</div>
+ 
+<div th:replace="include/personal/adminFooter::html" ></div>
+</body>
+</html>

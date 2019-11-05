@@ -1,0 +1,60 @@
+<div th:fragment="html"> 
+<!-- 	<div style="background-color: #F0FCFE;margin: 10px auto;height:300px;max-width: 1200px ">	
+		<div>
+			<h1 align="center">————&nbsp&nbsp&nbsp专家咨询&nbsp&nbsp&nbsp————</h1>
+		</div>
+		<div v-for="patentdomain in patentdomains" style="float:left;border: 1px solid gray; width: 250px;height:100px;margin-right:30px;margin-left: 20px;margin-top: 10px;marline-height: 100px;text-align: center;font-size: 18px;line-height: 100px ">			
+				:href="'admin_property_list?cid=' + bean.id "
+				<a :href="'patentbrokerlist/domainid='+patentdomain.id">
+					<b>{{patentdomain.domainName}}</b>				
+				</a>
+		</div>
+	</div> -->
+	
+	<div class="categoryProducts">
+		
+		<div v-for="broker in brokers">
+			<div style="position:relative;border: 1px solid #dff3f6;background-color: #f0fcfe;width: 1200px;height: 300px;margin: 20px auto">			
+				<div style="display: inline-block;">
+					<div>
+						<span style="display: inline-block;margin-top: 30px;margin-left: 30px"><img height="200px"  :src="'img/broker/'+broker.id+'.jpg'"></span>
+					</div>
+					<div >
+						<span style="display: inline-block;font-size: 18px;margin-left: 70px;margin-top: 25px;color: #C40000;font-weight: bold;">
+							所属机构:{{broker.agency.agentName}}
+						</span>
+					</div>
+				</div>
+				
+					<div style="float: right;top:30px;left: 300px;position: absolute;">
+						<span style="margin-right: 10px;font-size: 30px;color:#0299ff;">
+							{{broker.brokerName}}
+						</span>
+						<span style="margin-right: 200px;margin-top: -10px">
+							<!-- <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=406416513&site=qq&menu=yes">
+								<img border="0" src="http://wpa.qq.com/pa?p=2:406416513:52" alt="点击这里给我发消息" title="点击这里给我发消息"/>
+							</a> -->
+							<a target="_blank" :href="'http://wpa.qq.com/msgrd?v=3&uin='+broker.qqNumber+'&site=qq&menu=yes'">
+								<img border="0" :src="'http://wpa.qq.com/pa?p=2:'+broker.qqNumber+':52'" alt="点击这里给我发消息" title="点击这里给我发消息"/>
+							</a>
+ 						</span>
+						<span style="margin-right: 50px;font-size: 20px;color: #30bdce">擅长：{{broker.brokerDomain}}</span>
+						<!-- <span style="font-size: 20px;color: #30bdce">联系方式：{{agency.agentPhone}}</span> -->
+					</div>
+	
+				<div style="float: right;top:100px;left: 300px;position: absolute;">
+					<p style="color:#f3b804;text-justify:inter-ideograph;font-size: 16px;margin-top: 20px;margin-right: 70px">
+						知识产权经纪人简介：{{broker.brokerDesc}}
+					</p>
+				</div>
+			</div>
+		</div>
+			
+		<div style="clear:both"></div>
+	</div>
+	<!-- 分页 -->
+	<div>
+		<div th:replace="include/admin/adminPage::html"></div>
+	</div>
+	
+</div>

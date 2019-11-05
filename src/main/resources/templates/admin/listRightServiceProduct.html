@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/admin/adminHeader::html('产品管理')" ></head>
+<body>
+<div th:replace="include/admin/adminNavigator::html" ></div>
+<script>
+    $(function(){
+        var pdid = getUrlParms("pdid");
+        var data4Vue = {
+            uri:'serviceproducts',
+            bean: {id:0,'serviceName':'','serviceType':'','servicePrice':'','serviceDesc':'',patentDomain:{'id':0}},
+            beans: [],
+            pagination:{},
+            domain:''
+        };
+
+        //ViewModel
+        var vue = new Vue({
+            el: '#workingArea',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                this.list(0);
+                this.getDomain(pdid);
+            },
+            methods: {
+            	getDomain:function(pdid){
+                    var url = "domains/"+pdid;
+                    axios.get(url).then(function(response) {
+                        vue.domain = response.data;
+                    })
+                },
+                list:function(start){
+                    var url =  "domains/"+pdid+"/"+this.uri+"?start="+start;
+                    axios.get(url).then(function(response) {
+                        vue.pagination = response.data;
+                        vue.beans = response.data.content	;
+                    });
+                },
+                add: function () {
+					/* if(!checkEmpty(this.bean.name, "产品名称"))
+                        return;
+                    if (!checkEmpty(this.bean.subTitle, "小标题"))
+                        return;
+                    if (!checkNumber(this.bean.originalPrice, "原价格"))
+                        return;
+                    if (!checkNumber(this.bean.promotePrice, "优惠价格"))
+                        return;
+                    if (!checkInt(this.bean.stock, "库存"))
+                        return; */
+                    var url = this.uri;
+                    this.bean.patentDomain.id=pdid;
+                    axios.post(url,this.bean).then(function(response){
+                        vue.list(0);
+                        vue.bean =  {id:0,'serviceName':'','serviceType':'','servicePrice':'','serviceDesc':'',patentDomain:{'id':0}};
+                    });
+                },
+                deleteBean: function (id) {
+                    if(!checkDeleteLink())
+                        return;
+                    var url = this.uri+"/"+id;
+                    axios.delete(url).then(function(response){
+                        if(0!=response.data.length)
+                            alert(response.data);
+                        else
+                            vue.list(0);
+                    });
+                },
+                jump: function(page){
+                    jump(page,vue); //定义在adminHeader.html 中
+                },
+                jumpByNumber: function(start){
+                    jumpByNumber(start,vue);
+                }
+            }
+
+        });
+    });
+
+</script>
+
+<div id="workingArea" style="height: 1100px">
+    <ol class="breadcrumb">
+        <li><a href="admin_service_list">所有分类</a></li>
+        <li><a :href="'admin_rightProduct_list?pdid='+domain.id">{{domain.domainName}}</a></li>
+        <li class="active">服务管理</li>
+    </ol>
+
+    <div class="listDataTableDiv">
+        <table class="table table-striped table-bordered table-hover table-condensed">
+            <thead>
+            <tr class="success">
+                <th>ID</th>
+                <!-- <th>图片</th> -->
+                <th>服务名称</th>
+                <th>服务类型</th>
+               <!--  <th width="53px">申请号</th> -->
+                <th width="80px">服务定金</th>
+               <!--  <th width="80px">件数</th> -->
+	 			<th>服务详情</th> 
+                <th width="80px">图片管理</th>
+                <!-- <th width="80px">价值度</th>-->
+               
+                <th>删除</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="bean in beans ">
+                <td>{{bean.id}}</td>
+                <!-- <td>
+                    <img v-if="null != bean.firstProductImage" width="40px" :src="'img/productSingle/'+bean.firstProductImage.id+'.jpg'">
+                </td> -->
+                <td>{{bean.serviceName}}</td>
+                <td>{{bean.serviceType}}</td>
+                <td>{{bean.servicePrice}}</td>
+                <td>{{bean.serviceDesc|subStringFilter(0,60)}}</td>
+               <!--  <td>{{bean.stock}}</td> -->
+				<!-- <td>
+					{{bean.score}}
+                </td>  -->
+				
+               <td>
+                    <a :href="'admin_rightServiceImage_list?rsid=' + bean.id "><span class="glyphicon glyphicon-picture"></span></a>
+                </td>
+                
+                <!-- <td>
+                    <a :href="'admin_productAssess_edit?id=' + bean.id "><span class="glyphicon glyphicon-edit"></span></a>
+                </td> -->
+                
+                <td>
+                    <a href="#nowhere"  @click="deleteBean(bean.id)"><span class="   glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="include/admin/adminPage::html" ></div>
+    <div class="panel panel-warning addDiv">
+        <div class="panel-heading">新增服务</div>
+        <div class="panel-body">
+            <table class="addTable">
+                <tr>
+                    <td>服务名称</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.serviceName" type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>服务类型</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.serviceType" type="text"
+                                class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>服务定金</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.servicePrice"  type="text"
+                                class="form-control"></td>
+                </tr>
+                <!-- <tr>
+                    <td>服务详情</td>
+                    <td>
+                    	<input  @keyup.enter="add" v-model.trim="bean.serviceDesc" type="text"
+                                class="form-control">
+                    </td>
+                </tr> -->
+               
+              <!--  <tr>
+                    <td>件数</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.stock"  type="text"
+                                class="form-control"></td>
+                </tr> -->
+				 <tr>
+                    <td>服务详情</td>
+                    <td>
+                    
+                    	<textarea  @keyup.enter="add" v-model.trim="bean.serviceDesc" 
+                                class="form-control" cols="40" rows="10"></textarea>
+                                
+                    </td>
+                </tr>
+               
+                <tr class="submitTR">
+                    <td colspan="2" align="center">
+                        <a href="#nowhere"  @click="add" class="btn btn-success">提交</a>
+                    </td>
+                </tr>
+            </table>
+ 
+        </div>
+    </div>
+</div>
+
+<div th:replace="include/admin/adminFooter::html" ></div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<head th:include="include/fore/header::html" ></head>-->
+<meta charset="utf-8">
+<title>IUC首页</title>
+<style>
+
+    a {
+        color:#999;
+    }
+    html,body{
+        width:100%;
+        height:100%
+    }
+    body{
+
+        background-size:cover;
+        background-position:center;
+    }
+    .background{
+        opacity: 0.5;
+    }
+    .div_head{
+        width:400px;
+        height:30px;
+        margin-top:20px;
+        margin-left:1100px;
+
+    }
+    .h1,.h2{
+        text-align: center;
+        font-family: "book antiqua";
+        font-size: 10px;
+        color: darkgray;
+    }
+
+    .div_head1{
+        width:100%;
+        height:80px;
+        margin-top:85px;
+    }
+    .h3{
+        text-align: center;
+        font-family: "book antiqua";
+        font-size: 80px;
+        color: #000077;
+    }
+    .div_head2{
+        width:100%;
+        height:40px;
+        margin-top:5px;
+    }
+    .h4{
+        margin-top: 15px;
+        text-align: center;
+        font-family:"blackadder itc";
+        font-size: 20px;
+        color: #000066;
+    }
+    .div_search{
+        width:650px;
+        height:30px;
+        margin-top:15px;
+        margin-left:28%;
+    }
+    .div_foot{
+        width:40%;
+        height:30px;
+        position: absolute;
+        bottom: 0;
+        margin-bottom:10px;
+        margin-left:30%;
+        color:#999;
+        text-decoration:none;
+        text-align: center;
+        line-height: 22px;
+        font: 12px arial;
+    }
+
+    .input_search{
+        width:500px;
+        height:30px;
+        float:left;
+    }
+    .button_ok{
+        width: 100px;
+        height: 36px;
+        color: #fff;
+        font-size: 15px;
+        letter-spacing: 1px;
+        background: #006DCC;
+        border:0;
+        outline: medium;
+        float:left;
+    }
+
+</style>
+
+<body>
+<div id="workingArea">
+    <div class="background"></div>
+    <div class="div_head">
+        <a class="h1" href="login.html">立即登录&nbsp;</a>
+        <a class="h2" href="register.html">免费注册</a>
+    </div>
+    <div class="div_head1">
+        <h1 class="h3">I&nbsp;U&nbsp;C</h1>
+    </div>
+    <div class="div_head2">
+        <h2 class="h4">—&nbsp;最佳团队&nbsp; 合作创新&nbsp;—</h2>
+    </div>
+
+    <!--加form表单-->
+    <form action="search" method="get">
+        <div class="div_search">
+            <input id="wd" name="keyword" type="text" class="input_search" placeholder="请输入技术领域"/>
+            <button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
+                搜索
+            </button>
+        </div>
+    </form>
+
+    <div class="div_foot">
+        <a>Copyright&nbsp;@&nbsp;2019-2022&nbsp;&nbsp;IUC版权所有 使用IUC前必读</a>
+        <a>意见反馈</a>
+        <a>联系我</a>
+    </div>
+</div>
+</body>
+</html>

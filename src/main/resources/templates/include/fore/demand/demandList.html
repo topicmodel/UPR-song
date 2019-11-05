@@ -1,0 +1,85 @@
+<div th:fragment="html"> 
+	<div class="categoryProducts" style="margin-left: 110px;margin-top: 40px;height: 1000px">
+			<!-- 导航栏 -->
+			
+				<ul style="list-style-type:none;width: 200px"> 
+					<li v-on:click="getdemand('全部行业')" style="display: inline-block;text-align:center;width: 166px;height: 46px ;font-size: 18px;border:1px solid #dff3f6;background-color:#f0fcfe;font-style: bold ">
+						<span class="glyphicon glyphicon-th-large" style="line-height:46px;margin-right: 10px"></span>
+						<a style="cursor:pointer">全部行业</a>
+					</li>
+					<li v-on:click="getdemand('农林牧业')" style="display: inline-block;text-align:center;width: 166px;height: 46px ;font-size: 18px;border:1px solid #dff3f6;background-color:#f0fcfe;font-style: bold ">
+						<span class="glyphicon glyphicon-th-large" style="line-height:46px;margin-right: 10px"></span>
+						<a style="cursor:pointer">农林牧业</a>
+					</li>
+					
+					<li v-on:click="getdemand('医药医疗')" style="display: inline-block;text-align:center;width: 166px;height: 46px ;font-size: 18px;border:1px solid #dff3f6;background-color:#f0fcfe;font-style: bold ">
+						<span class="glyphicon glyphicon-th-large" style="line-height:46px;margin-right: 10px"></span>
+						<a style="cursor:pointer">医药医疗</a>
+					</li>
+					<li v-on:click="getdemand('电子信息')" style="display: inline-block;text-align:center;width: 166px;height: 46px ;font-size: 18px;border:1px solid #dff3f6;background-color:#f0fcfe;font-style: bold ">
+						<span class="glyphicon glyphicon-th-large" style="line-height:46px;margin-right: 10px"></span>
+						<a style="cursor:pointer">电子信息</a>
+					</li>
+					<li v-on:click="getdemand('新型材料')" style="display: inline-block;text-align:center;width: 166px;height: 46px ;font-size: 18px;border:1px solid #dff3f6;background-color:#f0fcfe;font-style: bold ">
+						<span class="glyphicon glyphicon-th-large" style="line-height:46px;margin-right: 10px"></span>
+						<a style="cursor:pointer">新型材料</a>
+					</li>
+					<li v-on:click="getdemand('环保能源')" style="display: inline-block;text-align:center;width: 166px;height: 46px ;font-size: 18px;border:1px solid #dff3f6;background-color:#f0fcfe;font-style: bold ">
+						<span class="glyphicon glyphicon-th-large" style="line-height:46px;margin-right: 10px"></span>
+						<a style="cursor:pointer">环保能源</a>
+					</li>
+					<li v-on:click="getdemand('机械装备')" style="display: inline-block;text-align:center;width: 166px;height: 46px ;font-size: 18px;border:1px solid #dff3f6;background-color:#f0fcfe;font-style: bold ">
+						<span class="glyphicon glyphicon-th-large" style="line-height:46px;margin-right: 10px"></span>
+						<a style="cursor:pointer">机械装备</a>
+					</li>
+					<li v-on:click="getdemand('化学化工')" style="display:inline-block;text-align:center;width: 166px;height: 46px ;font-size: 18px;border:1px solid #dff3f6;background-color:#f0fcfe;font-style: bold ">
+						<span class="glyphicon glyphicon-th-large" style="line-height:46px;margin-right: 10px"></span>
+						<a style="cursor:pointer">化学化工</a>
+					</li>
+				</ul>
+			
+			<!-- 需求列表 -->
+			 <div class="absolute" style="position: absolute;top:230px;left: 380px">		
+			<!--<div class="absolute" style="position: relative;top:-400px;left: -220px"> -->	
+			<div v-for="demand in categorydemands">
+	
+			<div align="right">
+				<div align="left" style=" display:inline-block;border: 1px solid #dff3f6;background-color: #f0fcfe;width: 850px;height: 170px;margin-top: 20px;">
+					<div style="margin: 20px 0 20px 0">
+						<a :href="'demandinfo?did=' + demand.id ">
+						<span style="background-color: #30bdce;color:white;font-size: 18px;padding: 5px;margin-right: 15px">
+							{{demand.demandType}}
+						</span>
+						
+						<span style="font-size: 18px;color:#0299ff;font-family:'Microsoft yahei'">
+							{{demand.demandName}}
+						</span>	
+						</a>					
+					</div>
+					
+					<div>
+						<span style="margin-left:15px;font-style: bold;font-size: 18px;color:  #30bdce">需求:&nbsp&nbsp&nbsp&nbsp</span>	
+						<p style="font-size: 16px;text-justify:inter-ideograph;margin-left: 20px">
+							{{demand.demandContent|subStringFilter(0,50)}}
+						</p>	
+					</div>
+					
+					<div style="margin-top: 20px;font-style: bold;font-size: 18px">
+						<span style="margin-left:15px;font-style: bold;color:  #30bdce">行业领域:&nbsp&nbsp&nbsp&nbsp</span>
+						<span style="font-size: 16px;color: #f7b852">
+							{{demand.industryType}}
+						</span>	
+					</div>		
+				</div>
+			</div>
+
+			</div>
+			</div>
+			<div style="clear:both"></div>
+	</div>
+	<!-- 分页 -->
+	<div>
+		<div th:replace="include/admin/adminPage::html"></div>
+	</div>
+	
+</div>

@@ -1,0 +1,23 @@
+<div th:fragment="html"> 
+	<div class="productDetailDiv" v-show="showDetail" >
+		<div class="productDetailTopPart">
+			<a href="#nowhere" class="productDetailTopPartSelectedLink selected">服务详情</a>
+			<a href="#nowhere" class="productDetailTopReviewLink" @click="toggle2Review">服务流程</span> </a>
+		</div>
+
+		<div class="productParamterPart">
+			<!-- <div class="productParamter" style="font-size: 15px">专利详览：</div> -->
+			
+		<!-- 显示评论内容 -->
+		<p id="showConclusion" style="font-size: 20px;color: black;line-height:200%;text-justify:inter-ideograph">
+			{{s.serviceDesc}}
+		</p>
+			
+		</div>
+		
+		<!-- <div class="productDetailImagesPart">
+			<img v-for="pi in p.productDetailImages" :src="'img/productDetail/'+pi.id+'.jpg'">
+		</div> -->
+	</div>
+</div>
+

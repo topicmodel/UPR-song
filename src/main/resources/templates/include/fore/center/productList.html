@@ -1,0 +1,57 @@
+<div th:fragment="html"> 
+	<!-- 数达中心简介 -->
+	<div style="width: 1100px;height: 280px;background-color: #F0FCFE;margin: 30px auto;">
+		<div style="display: inline-block;">
+			<img src="img/site/shuda.png" style="width: 200px;height: 100px;margin-top: 30px;margin-left: 30px">
+			<span style="float:right;font-size: 30px;font-weight: bold;margin-left: 20px;padding-top: 60px">专利荟萃</span>
+		</div>
+		<div style="float: right;z-index: 1;padding-top: 70px;padding-right: 50px">
+			<span style="font-size: 18px">拥有专利数：</span>
+			<span style="font-size: 18px;color: red;font-weight: bold">1500件</span>
+		</div>
+		
+		<div>
+			<p style="text-justify:inter-ideograph;font-size: 15px;margin-top: 40px;padding: 0px 40px;line-height: 30px">
+				武汉大学知识产权信息服务中心以专利核心、以科研工作者为主要服务对象，
+				以<b style="color: red">"打破信息孤岛，推动专利转化"</b>为目标，提供专利资源融合、
+				专利信息发布、专利需求定制、专利价值评估、
+				专利网络交易、专利深度分析的一站式综合应用服务平台，
+				以社交电商模式、共享经济模式、大数据驱动模式、生态服务模式为商业模式，
+				致力于推动个人专利转移转化、激活沉睡专利、提升我国科技创新能力为平台宗旨，
+				打造"智慧专利中心"。
+			</p>
+		</div>
+	</div>
+	
+	<!-- 每个分类下排名前10位的专利展示 -->
+	<div class="categoryProducts">
+		
+		    <div class="homepageCategoryProducts" style="width: 1100px">
+		        <div class="eachHomepageCategoryProducts" v-for="c in categories">
+		            <div class="left-mark"></div>
+		            <span class="categoryTitle">{{c.name}}</span>
+		            <br>
+		            <div class="productItem"  v-for="p,index in c.products" v-if="index<10" style="margin-left: 18px">
+		                <a :href="'product?pid='+p.id">
+		                    <img width="100px" :src="'img/productSingle_middle/'+p.firstProductImage.id+'.jpg'">
+		                </a>
+		
+		                <a class="productItemDescLink" href="'product?pid='+p.id">
+											<span class="productItemDesc">[精选]
+											{{p.name | subStringFilter(0,20)}}
+											</WWWspan>
+		                </a>
+		                <span  class="productPrice" style="display: inline;">
+											{{p.promotePrice | formatMoneyFilter}}
+						</span>
+						<span class="productPrice" style="display: inline;margin-left: 20px">
+											{{p.score}}分
+						</span>
+		            </div>
+		            <div style="clear:both"></div>
+		        </div>
+		    </div>
+		    
+	</div>
+	
+</div>

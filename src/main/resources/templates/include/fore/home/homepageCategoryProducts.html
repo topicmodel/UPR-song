@@ -1,0 +1,46 @@
+<div th:fragment="html">
+
+	<div style="margin: 20px auto" align="center">
+		<span>
+			<img src="img/site/sevenindustry.png"></a>
+		</span>
+	</div>
+	
+	<div style="margin: 20px auto" align="center">
+		<span>
+			<a href="shudacenter"><img src="img/site/shudajingxuan.png"></a>
+		</span>
+		<span>
+			<a href="demandlist"><img src="img/site/xuqiuduijie.png"></a>
+		</span>
+		<span>
+			<a href="agencylist"><img src="img/site/zhuanlijingjiren.png"></a>
+		</span>
+		<span>
+			<a href="shudashop"><img src="img/site/shudaservice.jpg" style="margin-top: 20px"></a>
+		</span>
+	</div>
+
+    <div class="homepageCategoryProducts">
+        <div class="eachHomepageCategoryProducts" v-for="c,index in categories">
+            <div class="left-mark"></div>
+            <span class="categoryTitle">{{c.name}}</span>
+            <br>
+            <div class="productItem"  v-for="p,index in c.products" v-if="index<5" style="margin-left: 30px">
+                <a :href="'product?pid='+p.id">
+                    <img width="100px" :src="'img/productSingle_middle/'+p.firstProductImage.id+'.jpg'">
+                </a>
+
+                <a class="productItemDescLink" href="'product?pid='+p.id">
+									<span class="productItemDesc">[热门]
+									{{p.name | subStringFilter(0,20)}}
+									</span>
+                </a>
+                <span class="productPrice">
+									{{p.promotePrice | formatMoneyFilter}}
+				</span>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+    </div>
+</div>

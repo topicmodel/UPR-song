@@ -1,0 +1,98 @@
+<div th:fragment="html"> 
+	<script>
+		$(function(){
+			
+			var did = getUrlParms("did");
+			console.log("did:"+did)
+	        var data4Vue = {
+	        		uri:'foredemanddesc',
+	        		demand:'',
+	        		showPhone:false
+	        };
+	        //ViewModel
+	        var vue = new Vue({
+	            el: '#workingArea',
+	            data: data4Vue,
+	            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+	            	this.load();
+	            },        
+	            methods: {     	
+	            	load:function(){
+	                    var url =  this.uri+"/"+did;//controller中撰写获取指定id的需求
+	                    axios.get(url).then(function(response) {
+	                    	vue.demand = response.data;
+	                    	console.log("需求为:"+vue.demand);
+	                        vue.$nextTick(function(){
+	        	            	linkDefaultActions();
+	                        })
+	                    });   
+	            	},
+	            	toggle2Phone:function(){
+	            		this.showPhone=true;
+	            	}
+	            	
+	            }
+	        });       			
+			
+	        Vue.filter('formatDateFilter', function (value, formatString) {
+	            if(null==value)
+	                return "";
+	            formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+	            return moment(value).format(formatString);
+	        });
+	        
+	        Vue.filter("subStringFilter", function(value, start, end){
+	            if (!value)
+	                return '';
+	            return value.substring(start,end);
+	        });
+		})
+	</script>
+	
+<!-- 	<title>模仿天猫官网-{{c.name}}</title>	 -->
+	<div style="border: 1px solid gray;margin: 20px auto;width: 1100px;">
+			<i style="margin-top:15px;font-size:16px;color:white;text-align:center;line-height:45px;display:inline-block;width: 137px;height: 45px;background-color: #25b7d0">{{demand.demandType}}</i>
+			<span style="display: inline-block;font-size: 15px;color: #C40000;margin-left: 20px">需求未解决</span>
+			<h3 style="margin: 20px 0 20px 70px;font-weight: bold;font-size: 25px;color: #FF7200">{{demand.demandName}}</h3>
+			<p>
+				<span class="glyphicon glyphicon-home" style="font-size: 16px;display: inline-block;margin:0px 60px 30px 70px;color: gray">
+					<b>行业:</b>
+					<span>{{demand.industryType}}</span>
+				</span>
+				<span class="glyphicon glyphicon-time" style="font-size: 16px;display: inline-block;color: gray">
+					<b>创建日期:</b>
+					<span>{{demand.createDate | formatDateFilter | subStringFilter(0,10)}}</span>
+					
+				</span>
+			</p>
+			<p>
+				<span class="glyphicon glyphicon-user" style="font-size: 16px;display: inline-block;margin:0px 60px 30px 70px;color: gray">
+					<b>联系人:</b>
+					<span>{{demand.contactPerson}}</span>
+				</span>
+				<span>
+					<span></span>
+					<span class="glyphicon glyphicon-tag" style="font-size: 16px;display: inline-block;color: gray">{{demand.contactAddress}}</span>
+				</span>
+			</p>
+			<p><b class="glyphicon glyphicon-briefcase" style="font-size: 16px;display: inline-block;margin:0px 60px 30px 70px;color: gray">需求:</b></p>
+			<p style="font-size: 16px;color: gray;width: 900px;text-justify:inter-ideograph;margin:0px 60px 30px 70px;">
+				{{demand.demandContent}}
+			</p>
+			<p v-show="showPhone">
+				<spanS class="glyphicon glyphicon-user" style="font-size: 16px;display: inline-block;margin:0px 60px 30px 70px;color: gray">
+					<b>联系电话:</b>
+					<span>{{demand.contactPhone}}</span>
+				</span>
+				<span class="glyphicon glyphicon-print"  style="font-size: 16px;display: inline-block;color: gray;margin:0px 60px 30px 70px;">
+					<b>联系邮箱：</b>
+					<span>{{demand.contactEmail}}</span>
+				</span>
+			</p>
+			<div align="center" style="margin-bottom: 20px">			
+				<button @click="toggle2Phone" style="border-radius:30px; width: 120px;height:50px; background-color: white;border: 2px solid #FF7200;color: #FF7200;font-size: 16px">
+					承接需求
+				</button>
+			</div>
+	</div>
+</div>

@@ -1,0 +1,70 @@
+<div th:fragment="html"> 
+	 <script>
+		 $(function(){
+			 
+	         var data4Vue = {
+	             uri:'foreshudashop',
+	             domains: []
+	         };
+	         //ViewModel
+	         var vue = new Vue({
+	             el: '#workingArea',
+	             data: data4Vue,
+	             mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+	                 linkDefaultActions();
+	                 this.load();
+	             },
+	             methods: {
+	                 load:function(){
+	                     var url =  this.uri;
+	                     axios.get(url).then(function(response) {
+	                         vue.domains = response.data;
+	                         console.log(domains);
+	                     });
+	                 }
+	             },
+	             filters:{
+	                 subTitleFilter:function(value) {
+	                     if (!value) return ''; //如果为空，则返回空字符串
+	                     return value.split(" ")[0]; //根据空格拆分，并且只获取数组第一个值
+	                 }
+	             }
+	         });
+	
+	     });
+	 </script>
+	 
+	 <!-- 导航按钮 -->
+	 <div th:replace="include/fore/shudashop/categoryAndcarousel::html" ></div>	
+	 
+	 <!-- 图片展示 -->
+	<div class="categoryProducts" style="margin: 0px auto;margin-top: 30px" align="center">
+			<img src="img/site/shudaziying.png">
+				
+			<div style="clear:both"></div>
+	</div>
+	<!-- 分类展示 -->
+	<div class="homepageCategoryProducts">
+        <div class="eachHomepageCategoryProducts" v-for="domain in domains">
+            <div class="left-mark"></div>
+            <span class="categoryTitle">{{domain.domainName}}</span>
+            <br>
+            <div class="productItem"  v-for="s,index in domain.services" v-if="index<5" style="margin-left: 30px">
+                <a :href="'rightservice?rsid='+s.id">
+                    <img width="100px" :src="'img/rightServiceSingle_middle/'+s.firstRightServiceImage.id+'.jpg'">
+                </a>
+ 
+                <a class="productItemDescLink" href="'product?rsid='+s.id">
+                                    <span class="productItemDesc">[热门]
+                                    {{s.serviceName | subStringFilter(0,20)}}
+                                    </span>
+                </a>
+                <span class="productPrice">
+                                    {{s.servicePrice | formatMoneyFilter}}
+                                </span>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+  
+    </div>
+</div>

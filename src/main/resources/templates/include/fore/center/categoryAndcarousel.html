@@ -1,0 +1,60 @@
+<div th:fragment="html">
+
+    <div class="categoryWithCarousel">
+
+
+        <div class="headbar show1">
+            <div class="head ">
+
+                <span style="margin-left:10px" class="glyphicon glyphicon-th-list"></span>
+                <span style="margin-left:10px;background-color: 008AA3" >专利分类</span>
+
+            </div>
+
+            <div class="rightMenu" style="font-size: 20px;color: white;">               		
+                <span class="glyphicon glyphicon-fire" style="margin-left: 140px;"></span>
+                <span style="margin-left: -10px;margin-right: 100px;font-size: 20px;font-weight:bold;color: white；">
+                	<a href="shudashop">知识产权服务</a>
+                </span>
+               
+               
+               	<span class="glyphicon glyphicon-briefcase" ></span>
+                <span style="margin-left: -10px;margin-right: 100px;font-size: 20px;font-weight:bold;color: white；">
+                	<a href="demandlist">知识产权需求</a>
+                </span>
+                
+               	<span class="glyphicon glyphicon-send"></span>
+                <span style="margin-left: -10px;margin-right: 100px;font-size: 20px;font-weight:bold;color: white；">
+                	<a href="agencylist">知识产权咨询</a>
+                </span>
+                
+
+                
+                <span class="glyphicon glyphicon-user"></span>
+                <span style="margin-left: -10px;font-size: 20px;font-weight:bold;color: white；">
+                	<a href="personal_info_list">个人管理中心</a>
+                </span>
+            </div>
+
+        </div>
+
+        <div style="position: relative">
+            <div th:replace="include/fore/center/categoryMenu::html" ></div>
+        </div>
+
+        <!-- <div style="position: relative;left: 0;top: 0;">
+            <div th:replace="include/fore/center/productsAsideCategorys::html" ></div>
+        </div> -->
+
+
+        <div th:replace="include/fore/center/carousel::html" ></div>
+
+
+        <div class="carouselBackgroundDiv">
+        </div>
+
+    </div>
+</div>
+
+
+
