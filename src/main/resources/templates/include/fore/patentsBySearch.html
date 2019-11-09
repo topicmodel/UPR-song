@@ -15,8 +15,8 @@
 
 							<div class="div_search">
 
-								<input id="wd" name="keyword" type="text" class="input_search" value="+'{{bean.name}}'+" />
-								{{bean.name}}
+								<input id="wd" name="keyword" type="text" class="input_search" :value="bean.name" disabled="disabled"/>
+
 								<button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
 									分析
 								</button>
