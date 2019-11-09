@@ -4,7 +4,7 @@
 			var keyword = getUrlParms("keyword");
 	        var data4Vue = {
 	        		uri:'foresearch',
-	        		patents:[]
+	        		keywords:[]
 	        };
 	        //ViewModel
 	        var vue = new Vue({
@@ -17,7 +17,7 @@
 	            	load:function(){
 	                    var url =  this.uri+"?keyword="+keyword;
 	                    axios.post(url).then(function(response) {
-	            	        vue.patents = response.data;
+	            	        vue.keywords = response.data;
 	                        vue.$nextTick(function(){
 	        	            	linkDefaultActions();
 	                        })

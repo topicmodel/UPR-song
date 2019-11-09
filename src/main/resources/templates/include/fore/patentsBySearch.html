@@ -4,28 +4,35 @@
 			<table class="table table-striped table-bordered table-hover  table-condensed">
 				<thead>
 				<tr class="success">
-					<th>ID</th>
-					<th>标题</th>
-					<th>申请号</th>
-					<th>申请人</th>
-					<th>发明人</th>
-					<th>专利描述</th>
+					<th>主题</th>
+					<th>tf*idf</th>
 				</tr>
 				</thead>
 				<tbody>
-				<tr v-for="bean in patents">
-					<td>{{bean.id}}</td>
-					<td>{{bean.patentTitle}}</td>
-					<td>{{bean.applyNum}}</td>
-					<td>{{bean.applyPerson}}</td>
-					<td>{{bean.patentInventor}}</td>
-					<td>{{bean.patentDesc | subStringFilter(0,100)}}</td>
+				<tr v-for="bean in keywords">
+					<td>
+						<form action="topicSearch" method="get">
+
+							<div class="div_search">
+
+								<input id="wd" name="keyword" type="text" class="input_search" value="+'{{bean.name}}'+" />
+								{{bean.name}}
+								<button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
+									分析
+								</button>
+							</div>
+						</form>
+
+					</td>
+
+					<!--<td>{{bean.tfidfvalue}}</td>-->
+
 				</tr>
 				</tbody>
 			</table>
 		</div>
 
-		<div v-if="0 == patents.length" class="noMatch">没有满足条件的专利</div>
+		<div v-if="0 == keywords.length" class="noMatch">没有满足条件的专利</div>
 
 		<div style="clear:both"></div>
 	</div>

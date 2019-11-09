@@ -34,6 +34,7 @@ public class ForePageController {
 	public String bought(){
 		return "fore/bought";
 	}
+
 	@GetMapping(value="/buy")
 	public String buy(){
 		return "fore/buy";
@@ -79,10 +80,13 @@ public class ForePageController {
 	public String review(){
 		return "fore/review";
 	}
+
+	//请求页面
 	@GetMapping(value="/search")
 	public String searchResult(){
 		return "fore/search";
 	}
+
 	@GetMapping("/forelogout")
 	public String logout(HttpSession session) {
 		session.removeAttribute("user");

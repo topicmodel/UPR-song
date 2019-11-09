@@ -3,6 +3,8 @@ import com.how2java.tmall.pojo.Patent;
 import com.how2java.tmall.pojo.Product;
 import com.how2java.tmall.service.PatentService;
 import com.how2java.tmall.util.Page4Navigator;
+import com.how2java.tmall.util.jieba.Keyword;
+import com.how2java.tmall.util.jieba.TFIDFAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,7 +54,24 @@ public class PatentController {
             keyword = "";
         }
         List<Patent> ps = patentService.search(keyword);
-        System.err.println("ps.length:"+ps.size());
-        return ps;
+        String patentTitles = null;
+        /*for(int i = 0;i<ps.size();i++){
+            String title = ps.get(i).getPatentTitle();
+            patentTitles[i]=title;
+        }*/
+        for(Patent p: ps){
+            patentTitles+=p.getPatentTitle();
+        }
+        System.out.println("title:"+patentTitles);
+
+        //int topN=5;
+        TFIDFAnalyzer tfidfAnalyzer=new TFIDFAnalyzer();
+        List<Keyword> list=tfidfAnalyzer.analyze(patentTitles,10);
+       /* for(Keyword word:list)
+            System.out.print(word.getName()+":"+word.getTfidfvalue()+",");*/
+
+
+        //System.err.println("ps.length:"+ps.size());
+        return list;
     }
 }

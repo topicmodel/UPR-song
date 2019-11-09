@@ -50,8 +50,7 @@ public class PatentService {
      * 根据关键词查询专利
      */
     public List<Patent> search(String keyword){
-        Sort sort = new Sort(Sort.Direction.DESC,"id");
-        //Pageable pageable = new PageRequest(start,size,sort);
+     
         List<Patent> patents = patentDAO.findByPatentTitleLike("%" + keyword + "%");
         return patents;
     }

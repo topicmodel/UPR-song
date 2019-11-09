@@ -6,10 +6,35 @@
 	<name>tmall_springboot</name>
 	<description>tmall_springboot</description>
 	<packaging>war</packaging>
+
+	<!--jieba-->
+	<scm>
+		<connection>scm:git:git@github.com:huaban/jieba-analysis.git</connection>
+		<developerConnection>scm:git:git@github.com:huaban/jieba-analysis.git</developerConnection>
+		<url>git@github.com:huaban/jieba-analysis.git</url>
+	</scm>
+
+	<name>结巴分词工具(jieba for java)</name>
+	<url>http://maven.apache.org</url>
+	<inceptionYear>2013</inceptionYear>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<!--jieba-->
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.9.RELEASE</version>
+
+		<groupId>org.sonatype.oss</groupId>
+			<artifactId>oss-parent</artifactId>
+		<version>7</version>
 	</parent>
 	<dependencies>
 		<!-- springboot web -->
