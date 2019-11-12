@@ -1,0 +1,39 @@
+<div class th:fragment="html">
+    <div class="searchProducts">
+        <div class="listDataTableDiv">
+            <table class="table table-striped table-bordered table-hover  table-condensed">
+                <thead>
+                <tr class="success">
+                    <th>高校排名</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="bean in patents">
+                    <td>
+                        <form action="inventorSearch" method="get">
+
+                            <div class="div_search">
+
+                                <input id="wd" name="keyword" type="text" class="input_search" :value="bean.applyPerson" disabled="disabled"/>
+
+                                <button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
+                                    点击进入
+                                </button>
+                            </div>
+                        </form>
+
+                    </td>
+
+                    <!--<td>{{bean.tfidfvalue}}</td>-->
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div v-if="0 == keywords.length" class="noMatch">没有满足条件的高校</div>
+
+        <div style="clear:both"></div>
+    </div>
+</div>
+

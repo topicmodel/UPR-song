@@ -87,6 +87,12 @@ public class ForePageController {
 		return "fore/search";
 	}
 
+	//热词请求页面
+	@GetMapping(value="/topicSearch")
+	public String topicSearchResult(){
+		return "fore/topicSearch";
+	}
+
 	@GetMapping("/forelogout")
 	public String logout(HttpSession session) {
 		session.removeAttribute("user");

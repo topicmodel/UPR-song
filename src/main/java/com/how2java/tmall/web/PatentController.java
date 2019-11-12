@@ -10,7 +10,21 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import static com.hankcs.hanlp.classification.utilities.CollectionUtility.sortMapByValue;
+import static org.thymeleaf.util.DartUtils.printMap;
 
 @RestController
 public class PatentController {
@@ -74,4 +88,32 @@ public class PatentController {
         //System.err.println("ps.length:"+ps.size());
         return list;
     }
+
+    /**
+     * 根据topicWords检索专利
+     * @param keyword
+     * @return
+     */
+    @PostMapping("/analyzeSchool")
+    public Object topicSearch(String keyword) {
+        if (null == keyword) {
+            keyword = "";
+        }
+        List<Patent> ps = patentService.topicSearch(keyword);
+        List<String> applyPersons = new ArrayList<String>();
+        for (Patent p : ps) {
+
+            if (p.getApplyPerson().contains("大学")) {
+                if (p.getApplyPerson().contains(";")) {
+                    continue;
+                }
+                applyPersons.add(p.getApplyPerson());
+            }
+        }
+        System.err.println("applyPerson" + applyPersons);
+
+
+        return applyPersons;
+    }
+
 }
