@@ -8,14 +8,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="bean in patents">
+                <tr v-for="bean in universitys">
                     <td>
                         <form action="inventorSearch" method="get">
 
                             <div class="div_search">
 
-                                <input id="wd" name="keyword" type="text" class="input_search" :value="bean.applyPerson" disabled="disabled"/>
-
+                                <input id="wd" name="keyword" type="text" class="input_search" :value="bean.name" disabled="disabled"/>
+                                <span>
+                                    {{bean.number}}
+                                </span>
                                 <button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
                                     点击进入
                                 </button>

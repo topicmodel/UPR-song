@@ -4,7 +4,8 @@
             var keyword = getUrlParms("keyword");
             var data4Vue = {
                 uri:'analyzeSchool',
-                keywords:[]
+                keywords:[],
+                universitys:[]
             };
             //ViewModel
             var vue = new Vue({
@@ -17,7 +18,9 @@
                     load:function(){
                         var url =  this.uri+"?keyword="+keyword;
                         axios.post(url).then(function(response) {
-                            vue.patents = response.data;
+                            var result = response.data;
+                            vue.universitys=result.data.university;
+
                             vue.$nextTick(function(){
                                 linkDefaultActions();
                             })

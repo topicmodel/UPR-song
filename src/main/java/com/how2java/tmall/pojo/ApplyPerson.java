@@ -1,8 +1,6 @@
 package com.how2java.tmall.pojo;
 
-import javax.persistence.Column;
-
-public class ApplyPerson {
+public class ApplyPerson  implements Comparable<ApplyPerson>{
 
     private String name;
     private int number;
@@ -21,5 +19,18 @@ public class ApplyPerson {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    @Override
+    public String toString() {
+        return "ApplyPerson{" +
+                "name='" + name + '\'' +
+                ", number=" + number +
+                '}';
+    }
+
+    @Override
+    public int compareTo(ApplyPerson o) {
+        return o.getNumber()-this.number;
     }
 }

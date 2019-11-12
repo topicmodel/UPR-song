@@ -1,8 +1,10 @@
 package com.how2java.tmall.web;
+import com.how2java.tmall.pojo.ApplyPerson;
 import com.how2java.tmall.pojo.Patent;
 import com.how2java.tmall.pojo.Product;
 import com.how2java.tmall.service.PatentService;
 import com.how2java.tmall.util.Page4Navigator;
+import com.how2java.tmall.util.Result;
 import com.how2java.tmall.util.jieba.Keyword;
 import com.how2java.tmall.util.jieba.TFIDFAnalyzer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,28 +66,16 @@ public class PatentController {
      */
     @PostMapping("/foresearch")
     public Object search(String keyword){
-        if(null == keyword){
-            keyword = "";
-        }
+
         List<Patent> ps = patentService.search(keyword);
         String patentTitles = null;
-        /*for(int i = 0;i<ps.size();i++){
-            String title = ps.get(i).getPatentTitle();
-            patentTitles[i]=title;
-        }*/
         for(Patent p: ps){
             patentTitles+=p.getPatentTitle();
         }
         System.out.println("title:"+patentTitles);
 
-        //int topN=5;
         TFIDFAnalyzer tfidfAnalyzer=new TFIDFAnalyzer();
         List<Keyword> list=tfidfAnalyzer.analyze(patentTitles,10);
-       /* for(Keyword word:list)
-            System.out.print(word.getName()+":"+word.getTfidfvalue()+",");*/
-
-
-        //System.err.println("ps.length:"+ps.size());
         return list;
     }
 
@@ -100,20 +90,76 @@ public class PatentController {
             keyword = "";
         }
         List<Patent> ps = patentService.topicSearch(keyword);
-        List<String> applyPersons = new ArrayList<String>();
+        List<String> persons = new ArrayList<String>();
+        //取出含有大学的applyPerson
         for (Patent p : ps) {
 
             if (p.getApplyPerson().contains("大学")) {
                 if (p.getApplyPerson().contains(";")) {
                     continue;
                 }
-                applyPersons.add(p.getApplyPerson());
+                persons.add(p.getApplyPerson());
             }
         }
-        System.err.println("applyPerson" + applyPersons);
+
+        Map<String,Integer> hashMap =new HashMap<>();
+        for(String str:persons){
+            if (str!=null || "".equals(str)) {
+                if(hashMap.containsKey(str)){
+                    hashMap.put(str,hashMap.get(str)+1);
+                }else{
+                    hashMap.put(str,1);
+                }
+            }
+        }
+        List<ApplyPerson> newPerson = new ArrayList<>();
+        for(Map.Entry<String,Integer> m:hashMap.entrySet()){
+            ApplyPerson applyPerson = new ApplyPerson();
+            applyPerson.setName(m.getKey());
+            applyPerson.setNumber(m.getValue());
+            newPerson.add(applyPerson);
+        }
+        //Begin：高校名称+高校数量
+/*        List<ApplyPerson> applyPersons =new ArrayList<>();
+        for (String str:persons){
+            ApplyPerson applyPerson = new ApplyPerson();
+            applyPerson.setName(str);
+            applyPerson.setNumber(1);
+            applyPersons.add(applyPerson);
+        }
+
+        Map<String, ApplyPerson> hashMap =new HashMap<>();
+        for(ApplyPerson person:applyPersons){
+            if(person.getName()!=null || "".equals(person.getName())){
+                if(hashMap.containsKey(person.getName())){
+                    int num = person.getNumber();
+                    num+=hashMap.get(person.getName()).getNumber();
+                    hashMap.get(person.getName()).setNumber(num);
+                }else{
+                    hashMap.put(person.getName(),person);
+                }
+            }
+        }
+
+        List<ApplyPerson> newPerson = new ArrayList<>();
 
 
-        return applyPersons;
+
+        for(ApplyPerson person: hashMap.values()){
+            newPerson.add(person);
+        }
+
+        Collections.sort(newPerson);*/
+        //End：高校名称+高校数量
+
+        for (ApplyPerson p:newPerson){
+            System.err.println("num:"+p.getNumber()+","+p.getName());
+        }
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("university",newPerson);
+        //System.err.println("applyPerson" + applyPersons);
+        return Result.success(map);
     }
 
 }
