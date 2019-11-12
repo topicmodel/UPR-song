@@ -55,5 +55,10 @@ public class PatentService {
         return patents;
     }
 
+    public List<Patent> topicSearch(String keyword){
+
+        List<Patent> patents = patentDAO.findByPatentTitleLike("%" + keyword + "%");
+        return patents;
+    }
 }
 
