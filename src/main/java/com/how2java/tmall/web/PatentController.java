@@ -1,7 +1,6 @@
 package com.how2java.tmall.web;
-import com.how2java.tmall.pojo.ApplyPerson;
-import com.how2java.tmall.pojo.Patent;
-import com.how2java.tmall.pojo.Product;
+import com.how2java.tmall.pojo.*;
+import com.how2java.tmall.service.InventorService;
 import com.how2java.tmall.service.PatentService;
 import com.how2java.tmall.util.Page4Navigator;
 import com.how2java.tmall.util.Result;
@@ -32,6 +31,9 @@ import static org.thymeleaf.util.DartUtils.printMap;
 public class PatentController {
     @Autowired
     PatentService patentService;
+
+    @Autowired
+    InventorService inventorService;
 
     @GetMapping("/patents")
     public Page4Navigator<Patent> list(@RequestParam(value = "start", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "5") int size) throws Exception {
@@ -69,7 +71,7 @@ public class PatentController {
     @PostMapping("/foresearch")
     public Object search(String keyword) {
 
-        List<Patent> ps = patentService.search(keyword);
+        List<Patent> ps = patentService.search("%"+keyword+"%");
         String patentTitles = null;
         for (Patent p : ps) {
             patentTitles += p.getPatentTitle();
@@ -82,7 +84,7 @@ public class PatentController {
     }
 
     /**
-     * 根据topicWords检索专利
+     * 根据topicWords检索专利,并返回专利权人
      *
      * @param keyword
      * @return
@@ -92,7 +94,7 @@ public class PatentController {
         if (null == keyword) {
             keyword = "";
         }
-        List<Patent> ps = patentService.topicSearch(keyword);
+        List<Patent> ps = patentService.topicSearch("%"+keyword+"%");
         List<String> persons = new ArrayList<String>();
         //取出含有大学的applyPerson
         for (Patent p : ps) {
@@ -153,9 +155,9 @@ public class PatentController {
         //End：高校名称+高校数量
 
         Collections.sort(newPerson);
-        for (ApplyPerson p : newPerson) {
+/*        for (ApplyPerson p : newPerson) {
             System.err.println("num:" + p.getNumber() + "," + p.getName());
-        }
+        }*/
 
 /*        Map<String, Object> map = new HashMap<>();
         map.put("university", newPerson);*/
@@ -163,4 +165,97 @@ public class PatentController {
         return newPerson;
 
     }
+    /**
+     * 根据university和keyword检索专利，并返回发明人
+     *
+     */
+    @PostMapping("/analyseInventor")
+    public Object inventorSearch(String university, String keyword) {
+        System.out.println(university+","+keyword);
+        //检索
+        List<Patent> patents = patentService.inventorSearch(university, "%"+keyword+"%");
+
+        //发明人链条集合
+        List<InventorLink>  links = new ArrayList<>();
+        List<String> inventors =new ArrayList<>();
+        //关系链条整理
+        for(Patent p: patents){
+            String patentInventor = p.getPatentInventor();
+            inventors.add(patentInventor);
+        }
+
+        for(String str:inventors){
+
+            if(str.indexOf(";")==0){
+                continue;
+            }
+            String[] split = str.split(";");
+
+            for(int i=1;i<split.length;i++){
+                System.out.println(split[i-1]);
+                InventorLink link = new InventorLink();
+                link.setSource(split[i-1]);
+                link.setTarget(split[i]);
+                link.setName("合作");
+                links.add(link);
+            }
+
+        }
+
+
+        System.err.println(patents.size());
+        //创建发明人集合
+        List<String> patentinventors = new ArrayList<>();
+
+        //装发明人
+        for (Patent p:patents){
+            String inventorNames = p.getPatentInventor();
+            if(inventorNames.indexOf(";")!=0){
+                String[] strInventor = inventorNames.split(";");
+                for(String str:strInventor){
+                    patentinventors.add(str);
+                }
+            }else{
+                patentinventors.add(inventorNames);
+            }
+        }
+
+
+        //统计发明人数
+        Map<String,Integer> map = new HashMap<>();
+        for(String str:patentinventors){
+            if(str !=null || "".equals(str)){
+                if(map.containsKey(str)){
+                    map.put(str,map.get(str)+1);
+                }else {
+                    map.put(str,1);
+                }
+            }
+        }
+        List<PatentInventor> patentInventors = new ArrayList<>();
+        for(Map.Entry<String,Integer> m:map.entrySet()){
+            PatentInventor inventor =new PatentInventor();
+            inventor.setInventorName(m.getKey());
+            inventor.setInventorNum(m.getValue());
+            patentInventors.add(inventor);
+        }
+        Collections.sort(patentInventors);
+
+        Map<String,Object> hashMap = new HashMap<>();
+        hashMap.put("link",links);
+        hashMap.put("inventor",patentInventors);
+
+        return hashMap;
+    }
+    //发明人详情资料
+    @PostMapping("/detailInventor")
+    public Object inventorDetail(String university,String inventor){
+        Inventor inventer = inventorService.findUserByUniversityAndName("%"+university+"%", "%"+inventor+"%");
+        List<Patent> patents = patentService.inventorDetail("%" + university + "%", "%" + inventor + "%");
+        Map<String,Object> map= new HashMap<>();
+        map.put("inventor",inventer);
+        map.put("patent",patents);
+        return map;
+    }
+
 }

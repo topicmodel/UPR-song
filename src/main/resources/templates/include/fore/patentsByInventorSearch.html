@@ -6,22 +6,24 @@
             <table class="table table-striped table-bordered table-hover  table-condensed">
                 <thead>
                 <tr class="success">
-                    <th>高校排名</th>
+                    <th>发明人排名</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="bean in universitys">
+                <tr v-for="bean in inventors">
                     <td>
-                        <form action="inventorSearch" method="get">
+                        <!--发明人详情-->
+                        <form action="inventorDetail" method="get">
 
                             <div class="div_search">
 
-                                <input id="wd" name="university" type="text" class="input_search" :value="bean.name"/>
-                                <!--<input id="wd1" name="keyword" type="text";value="keyword" disabled="disabled"/>-->
-                               <input type="text" v-model="keyword" name="keyword" style="display: none"/>
-
+                                <input id="wd" name="inventorname" type="text" class="input_search" :value="bean.inventorName"/>
+                                <input type="text" v-model="university" name="university" style="display: none"/>
+                                <span>
+                                    {{bean.inventorNum}}
+                                </span>
                                 <button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
-                                    点击进入
+                                    查看详情
                                 </button>
                             </div>
                         </form>
@@ -37,7 +39,7 @@
 
             </div>
 
-            <script type="text/javascript">
+            <!--<script type="text/javascript">
                 $(document).ready(function(){
                     // 基于准备好的dom，初始化echarts实例
                     var myChart = echarts.init(document.getElementById('main'));
@@ -91,7 +93,7 @@
                         }
                     });//end ajax*/
                 });
-            </script>
+            </script>-->
         </div>
         <div style="clear:both"></div>
     </div>

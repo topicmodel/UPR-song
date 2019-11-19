@@ -1,12 +1,14 @@
 <div class th:fragment="html">
     <script>
         $(function(){
-            var keyword = getUrlParms("keyword");
+            var university =  getUrlParms("university");
+            var inventor = getUrlParms("inventorname");
+            //图表
+
             var data4Vue = {
-                uri:'analyzeSchool',
-                keywords:[],
-                universitys:[],
-                keyword:keyword
+                uri:'detailInventor',
+                inventor:'',
+                patents:[]
         };
 
             //ViewModel
@@ -18,15 +20,17 @@
                 },
                 methods: {
                     load:function(){
-                        var url =  this.uri+"?keyword="+keyword;
+                        var url =  this.uri+"?university="+university+"&inventor="+inventor;
+                        //获取数据
                         axios.post(url).then(function(response) {
-                          /*  var result = response.data;
-                            vue.universitys=result.data.university;*/
-                            vue.universitys = response.data;
+                          var result = response.data;
+                            vue.inventor=result.inventor;
+                            vue.patents = result.patent;
                             vue.$nextTick(function(){
                                 linkDefaultActions();
                             })
                         });
+
                     }
                 }
             });
@@ -35,7 +39,7 @@
 
     <div id="topicSearchResult">
         <div class="topicSearchResultDiv">
-            <div th:replace="include/fore/patentsByTopicSearch::html" ></div>
+            <div th:replace="include/fore/patentsByInventorDetail::html" ></div>
         </div>
     </div>
 </div>

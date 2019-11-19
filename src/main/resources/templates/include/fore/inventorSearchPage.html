@@ -1,0 +1,131 @@
+<div class th:fragment="html">
+    <script>
+        $(function(){
+            var university =  getUrlParms("university");
+            var keyword = getUrlParms("keyword");
+
+            //图表
+
+            var data4Vue = {
+                uri:'analyseInventor',
+                keywords:[],
+                inventors:[],
+                name:{name:''},
+                personnames:[],
+                link:{target:'',source:'',name:''},
+                personlinks:[],
+                university:university
+        };
+
+            //ViewModel
+            var vue = new Vue({
+                el: '#workingArea',
+                data: data4Vue,
+                mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                    this.load();
+                },
+                methods: {
+                    load:function(){
+
+                        var url =  this.uri+"?university="+university+"&keyword="+keyword;
+                        //获取数据
+                        axios.post(url).then(function(response) {
+                          var result = response.data;
+                            vue.links=result.link;
+                            vue.inventors = result.inventor;
+
+                            for(var j=0;j<vue.links.length;j++){
+                                vue.link.target = vue.links[j].target;
+                                vue.link.source = vue.links[j].source;
+                                vue.link.name = vue.links[j].name;
+                                vue.personlinks.push(vue.link);
+                                vue.link={target:'',source:'',name:''};
+                            }
+
+                            for (var i=0;i<vue.inventors.length;i++){
+                                console.log(vue.inventors[i].inventorName);
+                                vue.name.name=vue.inventors[i].inventorName;
+                                vue.personnames.push(vue.name);
+                                vue.name={name:''};
+                            }
+                            console.log(vue.name[0]);
+                            var myChart = echarts.init(document.getElementById('main'));
+                            //数据加载完之前先显示一段简单的loading动画
+                            /*myChart.showLoading();*/
+                            //网络图显示
+                            option = {
+                                title: { text: '高校前沿研究团队' },
+                                tooltip: {
+                                    formatter: function (x) {
+                                        return x.data.des;
+                                    }
+                                },
+                                series: [
+                                    {
+                                        type: 'graph',
+                                        layout: 'force',
+                                        symbolSize: 80,
+                                        roam: true,
+                                        edgeSymbol: ['circle', 'arrow'],
+                                        edgeSymbolSize: [4, 10],
+                                        edgeLabel: {
+                                            normal: {
+                                                textStyle: {
+                                                    fontSize: 20
+                                                }
+                                            }
+                                        },
+                                        force: {
+                                            repulsion: 2500,
+                                            edgeLength: [10, 50]
+                                        },
+                                        draggable: true,
+                                        itemStyle: {
+                                            normal: {
+                                                color: '#4b565b'
+                                            }
+                                        },
+                                        lineStyle: {
+                                            normal: {
+                                                width: 2,
+                                                color: '#4b565b'
+                                            }
+                                        },
+                                        edgeLabel: {
+                                            normal: {
+                                                show: true,
+                                                formatter: function (x) {
+                                                    return x.data.name;
+                                                }
+                                            }
+                                        },
+                                        label: {
+                                            normal: {
+                                                show: true,
+                                                textStyle: {
+                                                }
+                                            }
+                                        },
+                                        data: vue.personnames,
+                                        links: vue.personlinks,
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option);
+                            vue.$nextTick(function(){
+                                linkDefaultActions();
+                            })
+                        });
+
+                    }
+                }
+            });
+        })
+    </script>
+
+    <div id="topicSearchResult">
+        <div class="topicSearchResultDiv">
+            <div th:replace="include/fore/patentsByInventorSearch::html" ></div>
+        </div>
+    </div>
+</div>

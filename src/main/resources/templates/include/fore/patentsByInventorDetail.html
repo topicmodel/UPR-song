@@ -1,0 +1,62 @@
+<div class th:fragment="html">
+    <script src="js/jquery/2.0.0/jquery.min.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <div class="searchProducts">
+        <div class="listDataTableDiv" style="width: 20%;float: left">
+            <!--发明人简介-->
+
+            <table class="table table-striped table-bordered table-hover  table-condensed">
+                <thead>
+                <tr class="success">
+                    <th>姓名</th>
+                    <th>学历</th>
+                    <th>技术领域</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <!--发明人详情-->
+                       {{inventor.inventorName}}
+                    </td>
+                    <td>
+                        <!--发明人详情-->
+                        {{inventor.education}}
+                    </td>
+                    <td>
+                        <!--发明人详情-->
+                        {{inventor.skills}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div  style="width: 80%;float: left;margin-top: 50px">
+            <table class="table table-striped table-bordered table-hover  table-condensed">
+                <thead>
+                <tr class="success">
+                    <th>发明人</th>
+                    <th>发明人</th>
+                    <th>发明人</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="bean in patents">
+                    <td>
+                        {{bean.patentInventor}}
+                    </td>
+                    <td>
+                        {{bean.patentTitle}}
+                    </td>
+                    <td>
+                        {{bean.applyPerson}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="clear:both"></div>
+    </div>
+</div>
+

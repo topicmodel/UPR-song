@@ -81,6 +81,16 @@ public class ForePageController {
 		return "fore/review";
 	}
 
+	//跳转到发明人界面
+	@GetMapping(value = "inventorSearch")
+	public String searchInventor(){
+		return "fore/inventorSearch";
+	}
+	//
+	@GetMapping(value = "inventorDetail")
+	public String inventorDetail(){
+		return "fore/inventorDetail";
+	}
 	//请求页面
 	@GetMapping(value="/search")
 	public String searchResult(){
