@@ -18,9 +18,9 @@
                     load:function(){
                         var url =  this.uri+"?keyword="+keyword;
                         axios.post(url).then(function(response) {
-                            var result = response.data;
-                            vue.universitys=result.data.university;
-
+                          /*  var result = response.data;
+                            vue.universitys=result.data.university;*/
+                            vue.universitys = response.data;
                             vue.$nextTick(function(){
                                 linkDefaultActions();
                             })

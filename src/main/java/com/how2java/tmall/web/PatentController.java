@@ -30,57 +30,60 @@ import static org.thymeleaf.util.DartUtils.printMap;
 
 @RestController
 public class PatentController {
-    @Autowired PatentService patentService;
+    @Autowired
+    PatentService patentService;
 
     @GetMapping("/patents")
-    public Page4Navigator<Patent> list(@RequestParam(value = "start", defaultValue = "0") int start,@RequestParam(value = "size", defaultValue = "5") int size) throws Exception {
-        start = start<0?0:start;
-        Page4Navigator<Patent> page = patentService.list(start,size,5);
+    public Page4Navigator<Patent> list(@RequestParam(value = "start", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "5") int size) throws Exception {
+        start = start < 0 ? 0 : start;
+        Page4Navigator<Patent> page = patentService.list(start, size, 5);
         return page;
     }
 
     @DeleteMapping("/patents/{id}")
-    public String delete(@PathVariable("id") int id, HttpServletRequest request)  throws Exception {
+    public String delete(@PathVariable("id") int id, HttpServletRequest request) throws Exception {
         patentService.delete(id);
         return null;
     }
 
     @GetMapping("/patents/{id}")
     public Patent get(@PathVariable("id") int id) throws Exception {
-        Patent bean=patentService.get(id);
+        Patent bean = patentService.get(id);
         return bean;
     }
 
     @PutMapping("/patents/{id}")
     public Object update(@RequestBody Patent bean) throws Exception {
-      //  System.out.println("bean:"+bean.toString());
-        System.out.println("bean:"+bean.getPatentInventor());
+        //  System.out.println("bean:"+bean.toString());
+        System.out.println("bean:" + bean.getPatentInventor());
         patentService.update(bean);
         return bean;
     }
 
     /**
      * 根据keyword检索专利
+     *
      * @param keyword
      * @return
      */
     @PostMapping("/foresearch")
-    public Object search(String keyword){
+    public Object search(String keyword) {
 
         List<Patent> ps = patentService.search(keyword);
         String patentTitles = null;
-        for(Patent p: ps){
-            patentTitles+=p.getPatentTitle();
+        for (Patent p : ps) {
+            patentTitles += p.getPatentTitle();
         }
-        System.out.println("title:"+patentTitles);
+        System.out.println("title:" + patentTitles);
 
-        TFIDFAnalyzer tfidfAnalyzer=new TFIDFAnalyzer();
-        List<Keyword> list=tfidfAnalyzer.analyze(patentTitles,10);
+        TFIDFAnalyzer tfidfAnalyzer = new TFIDFAnalyzer();
+        List<Keyword> list = tfidfAnalyzer.analyze(patentTitles, 10);
         return list;
     }
 
     /**
      * 根据topicWords检索专利
+     *
      * @param keyword
      * @return
      */
@@ -102,7 +105,7 @@ public class PatentController {
             }
         }
 
-        Map<String,Integer> hashMap =new HashMap<>();
+        /*Map<String,Integer> hashMap =new HashMap<>();
         for(String str:persons){
             if (str!=null || "".equals(str)) {
                 if(hashMap.containsKey(str)){
@@ -118,25 +121,25 @@ public class PatentController {
             applyPerson.setName(m.getKey());
             applyPerson.setNumber(m.getValue());
             newPerson.add(applyPerson);
-        }
+        }*/
         //Begin：高校名称+高校数量
-/*        List<ApplyPerson> applyPersons =new ArrayList<>();
-        for (String str:persons){
+        List<ApplyPerson> applyPersons = new ArrayList<>();
+        for (String str : persons) {
             ApplyPerson applyPerson = new ApplyPerson();
             applyPerson.setName(str);
             applyPerson.setNumber(1);
             applyPersons.add(applyPerson);
         }
 
-        Map<String, ApplyPerson> hashMap =new HashMap<>();
-        for(ApplyPerson person:applyPersons){
-            if(person.getName()!=null || "".equals(person.getName())){
-                if(hashMap.containsKey(person.getName())){
+        Map<String, ApplyPerson> hashMap = new HashMap<>();
+        for (ApplyPerson person : applyPersons) {
+            if (person.getName() != null || "".equals(person.getName())) {
+                if (hashMap.containsKey(person.getName())) {
                     int num = person.getNumber();
-                    num+=hashMap.get(person.getName()).getNumber();
+                    num += hashMap.get(person.getName()).getNumber();
                     hashMap.get(person.getName()).setNumber(num);
-                }else{
-                    hashMap.put(person.getName(),person);
+                } else {
+                    hashMap.put(person.getName(), person);
                 }
             }
         }
@@ -144,22 +147,20 @@ public class PatentController {
         List<ApplyPerson> newPerson = new ArrayList<>();
 
 
-
-        for(ApplyPerson person: hashMap.values()){
+        for (ApplyPerson person : hashMap.values()) {
             newPerson.add(person);
         }
-
-        Collections.sort(newPerson);*/
         //End：高校名称+高校数量
 
-        for (ApplyPerson p:newPerson){
-            System.err.println("num:"+p.getNumber()+","+p.getName());
+        Collections.sort(newPerson);
+        for (ApplyPerson p : newPerson) {
+            System.err.println("num:" + p.getNumber() + "," + p.getName());
         }
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("university",newPerson);
+/*        Map<String, Object> map = new HashMap<>();
+        map.put("university", newPerson);*/
         //System.err.println("applyPerson" + applyPersons);
-        return Result.success(map);
-    }
+        return newPerson;
 
+    }
 }

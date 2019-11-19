@@ -1,6 +1,8 @@
 <div class th:fragment="html">
+    <script src="js/jquery/2.0.0/jquery.min.js"></script>
+    <script src="js/echarts.min.js"></script>
     <div class="searchProducts">
-        <div class="listDataTableDiv">
+        <div class="listDataTableDiv" style="width: 20%;float: left">
             <table class="table table-striped table-bordered table-hover  table-condensed">
                 <thead>
                 <tr class="success">
@@ -15,6 +17,7 @@
                             <div class="div_search">
 
                                 <input id="wd" name="keyword" type="text" class="input_search" :value="bean.name" disabled="disabled"/>
+                                <input id="wd1" name="keyword" type="text";value="keyword" disabled="disabled"/>
                                 <span>
                                     {{bean.number}}
                                 </span>
@@ -23,18 +26,74 @@
                                 </button>
                             </div>
                         </form>
-
                     </td>
-
-                    <!--<td>{{bean.tfidfvalue}}</td>-->
-
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <div v-if="0 == keywords.length" class="noMatch">没有满足条件的高校</div>
+        <div id="uniECharts" style="width: 80%;float: left;margin-top: 50px">
+            <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+            <div id="main" style="width: 900px;height:500px;">
 
+            </div>
+
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    // 基于准备好的dom，初始化echarts实例
+                    var myChart = echarts.init(document.getElementById('main'));
+
+                    //数据加载完之前先显示一段简单的loading动画
+                    myChart.showLoading();
+                    var names=[];    //横坐标数组（实际用来盛放X轴坐标值）
+                    var numbers=[];    //纵坐标数组（实际用来盛放Y坐标值）
+                    var keyword = getUrlParms("keyword");
+                  $.ajax({
+                        type : "post",
+                        async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+                        url : "/tmall_springboot/analyzeSchool?keyword="+keyword,    //请求发送到dataActiont处
+                        data : {},
+                        dataType : "json",        //返回数据形式为json
+                        success : function(result) {
+                            //请求成功时执行该函数内容，result即为服务器返回的json对象
+                            if (result) {
+
+                                for(var i=0;i<result.length;i++){
+                                    console.log(result[i].name+result[i].number);
+                                    names.push(result[i].name);
+                                    numbers.push(result[i].number);
+                                }
+                                console.log("uni-name:"+names[0]+numbers[0]);
+                                myChart.hideLoading();    //隐藏加载动画
+                                myChart.setOption({        //加载数据图表
+                                    tooltip: {},
+                                    legend: {
+                                        data:['相似专利数']
+                                    },
+                                    xAxis: {
+                                        data: names
+                                    },
+                                    yAxis: {
+                                        type: 'value'
+                                    },
+                                    series: [{
+                                        // 根据名字对应到相应的系列
+                                        name: '相似专利数',
+                                        type: 'bar',
+                                        data: numbers
+                                    }]
+                                });
+                            }
+                        },
+                        error : function(errorMsg) {
+                            //请求失败时执行该函数
+                            alert("图表请求数据失败!");
+                            myChart.hideLoading();
+                        }
+                    });//end ajax*/
+                });
+            </script>
+        </div>
         <div style="clear:both"></div>
     </div>
 </div>
