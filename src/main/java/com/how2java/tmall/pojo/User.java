@@ -28,11 +28,6 @@ public class User {
 	private String profession;
 	private String address;
 
-	@Transient
-	List<Product> products;
-
-	@Transient
-	List<Demand> demands;
 
 	@Transient
 	private String anonymousName;
@@ -101,13 +96,6 @@ public class User {
 		this.address = address;
 	}
 
-	public List<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(List<Product> products) {
-		this.products = products;
-	}
 
 	public String getAnonymousName() {
 		if (null != anonymousName)

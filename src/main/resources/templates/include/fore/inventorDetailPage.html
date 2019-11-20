@@ -8,7 +8,11 @@
             var data4Vue = {
                 uri:'detailInventor',
                 inventor:'',
-                patents:[]
+                patents:[],
+                link:{source:'',target:'',value:0},
+                topiclinks:[],
+                topic:[],
+                topicname:{name:''}
         };
 
             //ViewModel
@@ -26,6 +30,35 @@
                           var result = response.data;
                             vue.inventor=result.inventor;
                             vue.patents = result.patent;
+                            var topics = result.topic;
+                            var topiclinks = result.link;
+                            //放入关键词
+                            for(var i =0;i<topics.length;i++){
+                                vue.topicname.name = topics[i].name;
+                                vue.topic.push(vue.topicname);
+                                vue.topicname={name:''};
+                            }
+                            //放入连接关系
+                            for(var i=0;i<topiclinks.length;i++){
+                                vue.link.source = topiclinks[i].source;
+                                vue.link.target = topiclinks[i].target;
+                                vue.link.value = topiclinks[i].value;
+                                vue.topiclinks.push(vue.link);
+                                vue.link = {source:'',target:'',value:0};
+                            }
+                            //画图
+                            var myChart = echarts.init(document.getElementById('main'));
+                            option = {
+                                series: {
+                                    type: 'sankey',
+                                    layout:'none',
+                                    focusNodeAdjacency: 'allEdges',
+                                    data: vue.topic,
+                                    links: vue.topiclinks
+                                }
+                            };
+                            myChart.setOption(option);
+
                             vue.$nextTick(function(){
                                 linkDefaultActions();
                             })

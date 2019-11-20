@@ -155,13 +155,7 @@ public class PatentController {
         //End：高校名称+高校数量
 
         Collections.sort(newPerson);
-/*        for (ApplyPerson p : newPerson) {
-            System.err.println("num:" + p.getNumber() + "," + p.getName());
-        }*/
 
-/*        Map<String, Object> map = new HashMap<>();
-        map.put("university", newPerson);*/
-        //System.err.println("applyPerson" + applyPersons);
         return newPerson;
 
     }
@@ -192,7 +186,7 @@ public class PatentController {
             String[] split = str.split(";");
 
             for(int i=1;i<split.length;i++){
-                System.out.println(split[i-1]);
+               // System.out.println(split[i-1]);
                 InventorLink link = new InventorLink();
                 link.setSource(split[i-1]);
                 link.setTarget(split[i]);
@@ -201,9 +195,7 @@ public class PatentController {
             }
 
         }
-
-
-        System.err.println(patents.size());
+       // System.err.println(patents.size());
         //创建发明人集合
         List<String> patentinventors = new ArrayList<>();
 
@@ -219,7 +211,6 @@ public class PatentController {
                 patentinventors.add(inventorNames);
             }
         }
-
 
         //统计发明人数
         Map<String,Integer> map = new HashMap<>();
@@ -250,11 +241,58 @@ public class PatentController {
     //发明人详情资料
     @PostMapping("/detailInventor")
     public Object inventorDetail(String university,String inventor){
+        //获取发明人信息
         Inventor inventer = inventorService.findUserByUniversityAndName("%"+university+"%", "%"+inventor+"%");
+        //获取发明人专利信息
         List<Patent> patents = patentService.inventorDetail("%" + university + "%", "%" + inventor + "%");
+        //对发明人专利进行分词处理
+        List<List<Keyword>> patentTitles = new ArrayList<>();
+        //分词器
+        TFIDFAnalyzer tfidfAnalyzer = new TFIDFAnalyzer();
+
+        for(Patent p:patents){
+            String patentTitle1 = p.getPatentTitle();
+            List<Keyword> list = tfidfAnalyzer.analyze(patentTitle1, 10);
+            patentTitles.add(list);
+        }
+
+        Map<String,Double> hashMap = new HashMap<>();
+        for(List<Keyword> keywords:patentTitles){
+            for(Keyword keyword:keywords){
+                if(keyword.getName()!=null || "".equals(keyword.getName())){
+                    if(hashMap.containsKey(keyword.getName())){
+                        hashMap.put(keyword.getName(),keyword.getTfidfvalue()+hashMap.get(keyword.getName()));
+                    }else{
+                        hashMap.put(keyword.getName(),keyword.getTfidfvalue());
+                    }
+                }
+            }
+        }
+        //装入关键词
+        List<InventorTopic> topic = new ArrayList<>();
+        for(Map.Entry<String,Double> m:hashMap.entrySet()){
+            InventorTopic t = new InventorTopic();
+            t.setName(m.getKey());
+            topic.add(t);
+        }
+        //处理关键词连接关系
+        List<TopicLink> links =new ArrayList<>();
+        for(List<Keyword> keywords:patentTitles){
+            for(int i = 1;i<keywords.size();i++){
+                TopicLink link = new TopicLink();
+                link.setSource(keywords.get(i-1).getName());
+                link.setTarget(keywords.get(i).getName());
+                link.setValue(keywords.get(i-1).getTfidfvalue()+keywords.get(i).getTfidfvalue());
+                links.add(link);
+            }
+        }
+
+
         Map<String,Object> map= new HashMap<>();
         map.put("inventor",inventer);
         map.put("patent",patents);
+        map.put("topic",topic);
+        map.put("link",links);
         return map;
     }
 
