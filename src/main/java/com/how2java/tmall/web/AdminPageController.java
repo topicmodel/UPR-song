@@ -18,7 +18,20 @@ public class AdminPageController {
 	@GetMapping(value="/admin_patent_edit")
 	public String editPatent(){
 		return "admin/editPatent";
+	}
+	@GetMapping(value="/admin_user_list")
+	public String listUser(){
+		return "admin/listUser";
 
+	}
+	@GetMapping(value="/admin_inventor_list")
+	public String listInventor(){
+		return "admin/listInventor";
+
+	}
+	@GetMapping(value="/admin_inventor_edit")
+	public String editInventor(){
+		return "admin/editInventor";
 	}
 
 	@GetMapping(value="/admin_infocategory_list")
@@ -84,11 +97,7 @@ public class AdminPageController {
 
 	}
 
-	@GetMapping(value="/admin_user_list")
-	public String listUser(){
-		return "admin/listUser";
 
-	}
 	
 	@GetMapping(value="/admin_assess_list")
 	public String listCategoryAssess(){

@@ -1,8 +1,6 @@
-
-
-
+<head th:include="include/fore/header::html" ></head>
 <nav class="top" th:fragment="html">
-    <
+
     <a th:href="center">
         <span style="color:#243b2b;margin:0px" class=" glyphicon glyphicon-home redColor" ></span>
         IUC首页
@@ -21,12 +19,10 @@
 		<a href="register">免费注册</a>
 	</span>
 
-    <!--<span class="pull-right">-->
-			<!--<a href="bought">我的订单</a>-->
-			<!--<a href="cart">-->
-			<!--<span style="color:#243b2b;margin:0px" class=" glyphicon glyphicon-shopping-cart redColor"></span>-->
-			<!--需求提交<strong th:text="${session.cartTotalItemNumber}"></strong>件</a>-->
-	<!--</span>-->
+    <span class="pull-right">
+			<a href="bought">我的关注</a>
+			<a href="cart">
+	</span>
 </nav>
 
 

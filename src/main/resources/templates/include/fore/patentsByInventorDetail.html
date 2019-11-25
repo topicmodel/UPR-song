@@ -1,9 +1,48 @@
 <div class th:fragment="html">
     <script src="js/jquery/2.0.0/jquery.min.js"></script>
     <script src="js/echarts.min.js"></script>
-    <div class="searchProducts">
-        <div class="listDataTableDiv" style="width: 20%;float: left">
-            <!--发明人简介-->
+
+    <div class="div1" style="width: 30%;height: 100%;position: relative;float: left;">
+        <div class="p1" style="font-size: 20px;margin-top: 20px;margin-left: 20px;font-weight: bold">科研大咖</div>
+        <div class="c1" style="border: 2px solid darkolivegreen;margin-top: 15px"></div>
+        <div class="c2" style="margin-top: 20px;border-radius:5px;text-align: center" >
+            <img src="img/zhao/zhao7.jpg" width="100" height="100" >
+        </div>
+        <div class="p2" style="margin-top: 10px;text-align: center;font-size: 30px">
+            {{inventor.inventorName}}
+        </div>
+        <div class="p3" style="margin-top: 10px;text-align: center;font-size: 25px">
+            {{inventor.university}}
+        </div>
+        <div class="b1" style="margin-top: 20px;text-align: center">
+            <button style="text-align: center;font-size: 15px;color:white;width: 400px;background-color: #3e8f3e" >
+             点击关注
+            </button>
+        </div>
+        <div class="c1" style="border: 2px solid darkolivegreen;margin-top: 20px"></div>
+        <div class="div1">
+            <div class="p1" style="margin-left:20px;font-size: 20px;font-weight: bold">About Me</div>
+            <div class="d2" style="margin-left:20px;margin-top: 30px;">
+                <div style="font-size: 18px;font-weight: bold">Education</div>
+                <div style="font-size: 15px">{{inventor.education}}</div>
+            </div>
+            <div class="d3" style="margin-left:20px;margin-top: 30px">
+                <div style="font-size: 18px;font-weight: bold">Location</div>
+                <div style="font-size: 15px">{{inventor.location}}</div>
+            </div>
+            <div class="d4" style="margin-left:20px;margin-top: 30px">
+                <div style="font-size: 18px;font-weight: bold">Skills</div>
+                <div style="font-size: 15px">{{inventor.skills}}</div>
+            </div>
+            <div class="d5" style="margin-left:20px;margin-top: 30px">
+                <div style="font-size: 18px;font-weight: bold">Email</div>
+                <div style="font-size: 15px">{{inventor.email}}</div>
+            </div>
+
+        </div>
+
+        <!--<div class="listDataTableDiv" style="margin-top: 20px">
+            &lt;!&ndash;发明人简介&ndash;&gt;
 
             <table class="table table-striped table-bordered table-hover  table-condensed">
                 <thead>
@@ -16,38 +55,44 @@
                 <tbody>
                 <tr>
                     <td>
-                        <!--发明人详情-->
+                        &lt;!&ndash;发明人详情&ndash;&gt;
                        {{inventor.inventorName}}
                     </td>
                     <td>
-                        <!--发明人详情-->
+                        &lt;!&ndash;发明人详情&ndash;&gt;
                         {{inventor.education}}
                     </td>
                     <td>
-                        <!--发明人详情-->
+                        &lt;!&ndash;发明人详情&ndash;&gt;
                         {{inventor.skills}}
                     </td>
                 </tr>
                 </tbody>
             </table>
-        </div>
+        </div>-->
+    </div>
 
-        <!--发明人专利冲击图-->
-        <div id="uniECharts" style="width: 80%;float: left;margin-top: 50px">
+    <div class="div2" style="width: 70%;float: left">
+    <!--发明人专利冲击图-->
+    <div  class="div21" id="uniECharts" style="position: relative;float: left;margin-left: 30px;margin-top: 5px">
+         <div class="c1" style="border: 2px solid darkolivegreen;margin-top: 58px;width: 60px;"></div>
+        <div style="margin-top: 15px;font-size: 15px;font-weight: bold">研究重点</div>
             <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-            <div id="main" style="width: 900px;height:500px;">
+            <div id="main" style="width: 900px;height:400px;margin-top: 20px;text-align: center">
 
             </div>
-        </div>
+        <div class="c1" style="border: 2px solid darkolivegreen;margin-top: 15px;margin-bottom: 30px"></div>
+        <div style="margin-bottom: 30px;font-size: 15px;font-weight: bold">专利申请情况</div>
+    </div>
 
-        <div  style="width: 80%;float: left;margin-top: 50px">
-            <!--发明人专利列表-->
+    <div class="div22" style="margin-left: 30px;margin-top:30px;width: 900px;height: 200px;">
+        <!--发明人专利列表-->
             <table class="table table-striped table-bordered table-hover  table-condensed">
                 <thead>
                 <tr class="success">
                     <th>发明人</th>
-                    <th>发明人</th>
-                    <th>发明人</th>
+                    <th>专利名称</th>
+                    <th>申请人</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -64,9 +109,9 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
-
-        <div style="clear:both"></div>
     </div>
+    </div>
+        <div style="clear:both"></div>
+
 </div>
 

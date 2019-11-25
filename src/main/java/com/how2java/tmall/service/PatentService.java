@@ -1,6 +1,8 @@
 package com.how2java.tmall.service;
 
+import com.how2java.tmall.dao.InventorDAO;
 import com.how2java.tmall.dao.PatentDAO;
+import com.how2java.tmall.pojo.Inventor;
 import com.how2java.tmall.pojo.Patent;
 import com.how2java.tmall.util.Page4Navigator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ public class PatentService {
     public Patent getById(int id) {
         return patentDAO.findById(id);
     }
+
 
     public Page4Navigator<Patent> list(int start, int size, int navigatePages) {
         Sort sort = new Sort(Sort.Direction.DESC, "id");

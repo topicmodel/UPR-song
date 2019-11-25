@@ -1,6 +1,8 @@
 package com.how2java.tmall.service;
 
+import com.how2java.tmall.dao.InventorDAO;
 import com.how2java.tmall.dao.UserDAO;
+import com.how2java.tmall.pojo.Inventor;
 import com.how2java.tmall.pojo.User;
 import com.how2java.tmall.util.Page4Navigator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class UserService {
 		return userDAO.findById(id);
 	}
 
-
+	//根据用户名和密码检查是否存在用户
 	public User get(String name, String password) {
 		return userDAO.getByNameAndPassword(name, password);
 	}

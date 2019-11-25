@@ -5,7 +5,7 @@
         <div class="listDataTableDiv" style="width: 20%;float: left">
             <table class="table table-striped table-bordered table-hover  table-condensed">
                 <thead>
-                <tr class="success">
+                <tr class="success" style="font-size: 15px">
                     <th>高校排名</th>
                 </tr>
                 </thead>
@@ -16,13 +16,13 @@
 
                             <div class="div_search">
 
-                                <input id="wd" name="university" type="text" class="input_search" :value="bean.name"/>
+                                <input id="wd" name="university" type="text" class="input_search" style="border: 0px":value="bean.name"/>
                                 <!--<input id="wd1" name="keyword" type="text";value="keyword" disabled="disabled"/>-->
-                               <input type="text" v-model="keyword" name="keyword" style="display: none"/>
-                                <span>
+                               <input type="text" v-model="keyword" name="keyword" style="display: none;margin-left: 50px"/>
+                                <!--<span>
                                     {{bean.number}}
-                                </span>
-                                <button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
+                                </span>-->
+                                <button id="ok" name="ok" type="submit" value="提交" class="button_ok" style="margin-right: 5px">
                                     科研团队分析
                                 </button>
                             </div>
@@ -33,9 +33,9 @@
             </table>
         </div>
 
-        <div id="uniECharts" style="width: 80%;float: left;margin-top: 50px">
+        <div id="uniECharts" style="width: 80%;float: left;margin-top: 50px;margin-left: auto">
             <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-            <div id="main" style="width: 900px;height:500px;">
+            <div id="main" style="width: 1000px;height:600px;">
 
             </div>
 

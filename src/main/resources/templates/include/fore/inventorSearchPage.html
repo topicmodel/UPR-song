@@ -54,7 +54,17 @@
                             /*myChart.showLoading();*/
                             //网络图显示
                             option = {
-                                title: { text: '高校前沿研究团队' },
+                                title: {
+                                    show:true,
+                                    text: '高校前沿研究团队',
+                                    backgroundColor: 'SeaGreen',
+                                    textStyle: {
+                                        color:"white",
+                                        fontWeight: "bolder",
+                                        fontSize:"15"
+                                    },
+
+                                },
                                 tooltip: {
                                     formatter: function (x) {
                                         return x.data.des;
@@ -72,6 +82,7 @@
                                             normal: {
                                                 textStyle: {
                                                     fontSize: 20
+
                                                 }
                                             }
                                         },
@@ -82,13 +93,13 @@
                                         draggable: true,
                                         itemStyle: {
                                             normal: {
-                                                color: '#4b565b'
+                                                color: '#3d5b0d'
                                             }
                                         },
                                         lineStyle: {
                                             normal: {
                                                 width: 2,
-                                                color: '#4b565b'
+                                                color: '#0c5b56'
                                             }
                                         },
                                         edgeLabel: {

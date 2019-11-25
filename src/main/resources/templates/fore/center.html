@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<!--<head th:include="include/fore/header::html" ></head>-->
 <meta charset="utf-8">
 <title>IUC首页</title>
 <style>
@@ -93,10 +92,12 @@
 <body>
 <div id="workingArea">
     <div class="background"></div>
-    <div class="div_head">
+<!--    <div class="div_head">
         <a class="h1" href="login.html">立即登录&nbsp;</a>
         <a class="h2" href="register.html">免费注册</a>
-    </div>
+    </div>-->
+    <div th:replace="include/fore/top::html" ></div>
+
     <div class="div_head1">
         <h1 class="h3">I&nbsp;U&nbsp;C</h1>
     </div>
