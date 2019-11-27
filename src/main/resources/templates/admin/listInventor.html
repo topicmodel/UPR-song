@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin/adminHeader::html('专家管理')" ></head>
+<body>
+<div th:replace="include/admin/adminNavigator::html" ></div>
+<script>
+    $(function(){
+
+        var data4Vue = {
+            uri:'inventors',
+            // bean: { id: 0, inventorName: '',education: '',location: '',skills: '',email: '',university:''},
+            beans: [],
+            pagination:{}
+        };
+
+        //ViewModel
+        var vue = new Vue({
+            el: '#workingArea',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                this.list(0);
+            },
+            methods: {
+                list:function(start){
+                    var url =  this.uri+ "?start="+start;
+                    axios.get(url).then(function(response) {
+                        vue.pagination = response.data;
+                        vue.beans = response.data.content	;
+                    });
+                },
+                add: function () {
+                    /*if(!checkEmpty(this.bean.name, "分类名称"))
+                        return;
+                    if(!checkEmpty(this.file, "分类图片"))
+                        return;*/
+                    var url = this.uri;
+
+                    //axios.js 上传文件要用 formData 这种方式
+                    var formData = new FormData();
+                    formData.append("inventorName", this.bean.inventorName);
+                    formData.append("education", this.bean.education);
+                    formData.append("location", this.bean.location);
+                    formData.append("skills", this.bean.skills);
+                    formData.append("email", this.bean.email);
+                    formData.append("university", this.bean.university);
+                    axios.post(url,formData).then(function(response){
+                        vue.list(0);
+                        vue.bean = { id: 0, inventorName: '',education: '',location: '',skills: '',email: '',university:''};
+                        $("#inventorPic").val('');
+                        vue.file = null;
+                    });
+                },
+                deleteBean: function (id) {
+                    if(!checkDeleteLink())
+                        return;
+                    var url = this.uri+"/"+id;
+                    axios.delete(url).then(function(response){
+                        if(0!=response.data.length){
+                            alert(response.data);
+                        }
+                        else{
+                            vue.list(0);
+                        }
+                    });
+                },
+                getFile: function (event) {
+                    this.file = event.target.files[0];
+                },
+                jump: function(page){
+                    jump(page,vue); //定义在adminHeader.html 中
+                },
+                jumpByNumber: function(start){
+                    jumpByNumber(start,vue);
+                }
+            }
+        });
+    });
+
+</script>
+
+<div id="workingArea" >
+    <h1 class="label label-info" >专家管理</h1>
+    <br>
+    <br>
+
+    <div class="listDataTableDiv">
+        <table class="table table-striped table-bordered table-hover  table-condensed">
+            <thead>
+            <tr class="success">
+                <th>id</th>
+                <th>专家姓名</th>
+                <th>学历</th>
+                <th>地址</th>
+                <th>技术领域</th>
+                <th>邮箱</th>
+                <th>所在高校</th>
+                <th>修改</th>
+                <th>删除</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="bean in beans ">
+                <td>{{bean.id}}</td>
+                <td>{{bean.inventorName}}</td>
+                <td>{{bean.education}}</td>
+                <td>{{bean.location}}</td>
+                <td>{{bean.skills}}</td>
+                <td>{{bean.email}}</td>
+                <td>{{bean.university}}</td>
+                <td>
+                    <a :href="'admin_inventor_edit?id=' + bean.id "><span class="glyphicon glyphicon-edit"></span></a>
+                </td>
+                <td>
+                    <a href="#nowhere"  @click="deleteBean(bean.id)"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="include/admin/adminPage::html" ></div>
+<!--
+    <div class="panel panel-warning addDiv">
+        <div class="panel-heading">新增专家</div>
+        <div class="panel-body">
+            <table class="addTable">
+                <tr>
+                    <td>专家姓名</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.inventorName" type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>学历</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.education" type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>地址</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.location" type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>技术领域</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.skills" type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>邮箱</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.email" type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>所在高校</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.university" type="text" class="form-control"></td>
+                </tr>
+
+                <tr class="submitTR">
+                    <td colspan="2" align="center">
+                        <a href="#nowhere"  @click="add" class="btn btn-success">提交</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>-->
+
+
+</div>
+
+<div th:replace="include/admin/adminFooter::html" ></div>
+</body>
+</html>
