@@ -14,7 +14,7 @@
 		<url>git@github.com:huaban/jieba-analysis.git</url>
 	</scm>
 
-	<name>结巴分词工具(jieba for java)</name>
+	
 	<url>http://maven.apache.org</url>
 	<inceptionYear>2013</inceptionYear>
 	<licenses>
@@ -32,9 +32,9 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.9.RELEASE</version>
 
-		<groupId>org.sonatype.oss</groupId>
+		<!-- <groupId>org.sonatype.oss</groupId>
 			<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<version>7</version> -->
 	</parent>
 	<dependencies>
 		<!-- springboot web -->

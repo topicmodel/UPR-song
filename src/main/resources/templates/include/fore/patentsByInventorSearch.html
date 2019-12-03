@@ -2,11 +2,11 @@
     <script src="js/jquery/2.0.0/jquery.min.js"></script>
     <script src="js/echarts.min.js"></script>
     <div class="searchProducts">
-        <div class="listDataTableDiv" style="width: 20%;float: left">
+        <div class="listDataTableDiv" style="width: 25%;float: left">
             <table class="table table-striped table-bordered table-hover  table-condensed">
                 <thead>
                 <tr class="success" style="font-size: 15px;height: 30px;">
-                    <th>发明人排名</th>
+                    <th>发明人&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;相似专利件数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击查看</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -19,10 +19,10 @@
 
                                 <input id="wd" name="inventorname" type="text" class="input_search" style="border: 0px" :value="bean.inventorName"/>
                                 <input type="text" v-model="university" name="university" style="display: none"/>
-                                <span>
+                                <span style="margin-left:0px">
                                     {{bean.inventorNum}}
                                 </span>
-                                <button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
+                                <button id="ok" name="ok" type="submit" value="提交" class="button_ok" style="margin-left:70px">
                                     查看大咖详情
                                 </button>
                             </div>
@@ -33,7 +33,7 @@
             </table>
         </div>
 
-        <div id="uniECharts" style="width: 80%;float: left;margin-top: 50px">
+        <div id="uniECharts" style="width: 75%;float: left;margin-top: 50px">
             <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
             <div id="main" style="width: 1000px;height:500px;margin-left: 100px">
 

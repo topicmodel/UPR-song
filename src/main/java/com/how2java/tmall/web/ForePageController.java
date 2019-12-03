@@ -26,6 +26,12 @@ public class ForePageController {
 	public String register(){
 		return "fore/register";
 	}
+	@GetMapping(value="/userInfo")
+	public String userInfo(){
+		return "fore/userInfo";
+	}
+	
+	
 	@GetMapping(value="/alipay")
 	public String alipay(){
 		return "fore/alipay";

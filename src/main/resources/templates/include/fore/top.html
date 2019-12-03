@@ -9,7 +9,7 @@
     <span>Hi，欢迎来到IUC</span>
 
     <span th:if="${null!=session.user}">
-		<a href="personal_info_list" th:text="${session.user.name}"></a>
+		<a href="userInfo" th:text="${session.user.name}"></a>
 		<a href="forelogout" >退出</a>
 	</span>
 
@@ -19,10 +19,10 @@
 		<a href="register">免费注册</a>
 	</span>
 
-    <span class="pull-right">
+    <!-- <span class="pull-right">
 			<a href="bought">我的关注</a>
 			<a href="cart">
-	</span>
+	</span> -->
 </nav>
 
 

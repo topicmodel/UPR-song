@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.how2java.tmall.pojo.User;
 import com.how2java.tmall.service.UserService;
 import com.how2java.tmall.util.Page4Navigator;
+import com.how2java.tmall.util.Result;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,7 +40,12 @@ public class InventorController {
         inventorService.update(bean);
         return bean;
     }
-
+    
+    @PostMapping("/inventors")
+    public Object add(@RequestBody Inventor bean) throws Exception{
+    	inventorService.add(bean);
+    	return Result.success();
+    }
 }
 
 

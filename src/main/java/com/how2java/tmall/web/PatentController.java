@@ -1,31 +1,34 @@
 package com.how2java.tmall.web;
-import com.how2java.tmall.pojo.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.how2java.tmall.pojo.ApplyPerson;
+import com.how2java.tmall.pojo.Inventor;
+import com.how2java.tmall.pojo.InventorLink;
+import com.how2java.tmall.pojo.InventorTopic;
+import com.how2java.tmall.pojo.Patent;
+import com.how2java.tmall.pojo.PatentInventor;
+import com.how2java.tmall.pojo.TopicLink;
 import com.how2java.tmall.service.InventorService;
 import com.how2java.tmall.service.PatentService;
 import com.how2java.tmall.util.Page4Navigator;
-import com.how2java.tmall.util.Result;
 import com.how2java.tmall.util.jieba.Keyword;
 import com.how2java.tmall.util.jieba.TFIDFAnalyzer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import static com.hankcs.hanlp.classification.utilities.CollectionUtility.sortMapByValue;
-import static org.thymeleaf.util.DartUtils.printMap;
 
 @RestController
 public class PatentController {
@@ -79,7 +82,7 @@ public class PatentController {
         System.out.println("title:" + patentTitles);
 
         TFIDFAnalyzer tfidfAnalyzer = new TFIDFAnalyzer();
-        List<Keyword> list = tfidfAnalyzer.analyze(patentTitles, 10);
+        List<Keyword> list = tfidfAnalyzer.analyze(patentTitles, 9);
         return list;
     }
 

@@ -9,8 +9,9 @@
 
         var data4Vue = {
             uri:'inventors',
-            // bean: { id: 0, inventorName: '',education: '',location: '',skills: '',email: '',university:''},
+            bean: { id: 0, inventorName: '',education: '',location: '',skills: '',email: '',university:''},
             beans: [],
+            
             pagination:{}
         };
 
@@ -37,18 +38,18 @@
                     var url = this.uri;
 
                     //axios.js 上传文件要用 formData 这种方式
-                    var formData = new FormData();
+                    /* var formData = new FormData();
                     formData.append("inventorName", this.bean.inventorName);
                     formData.append("education", this.bean.education);
                     formData.append("location", this.bean.location);
                     formData.append("skills", this.bean.skills);
                     formData.append("email", this.bean.email);
-                    formData.append("university", this.bean.university);
-                    axios.post(url,formData).then(function(response){
+                    formData.append("university", this.bean.university); */
+                    axios.post(url,vue.bean).then(function(response){
                         vue.list(0);
                         vue.bean = { id: 0, inventorName: '',education: '',location: '',skills: '',email: '',university:''};
-                        $("#inventorPic").val('');
-                        vue.file = null;
+                        /* $("#inventorPic").val('');
+                        vue.file = null; */
                     });
                 },
                 deleteBean: function (id) {
@@ -120,7 +121,7 @@
     </div>
 
     <div th:replace="include/admin/adminPage::html" ></div>
-<!--
+
     <div class="panel panel-warning addDiv">
         <div class="panel-heading">新增专家</div>
         <div class="panel-body">
@@ -157,7 +158,7 @@
                 </tr>
             </table>
         </div>
-    </div>-->
+    </div>
 
 
 </div>
