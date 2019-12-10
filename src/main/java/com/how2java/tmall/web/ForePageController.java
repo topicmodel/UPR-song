@@ -7,6 +7,14 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class ForePageController {
+	/**
+	 * 测试热力图
+	 * @return
+	 */
+	@GetMapping(value="/heat")
+	public String heat(){
+		return  "fore/testHeatPic";
+	}
 	@GetMapping(value="/")
 	public String index(){
 		return "redirect:center";

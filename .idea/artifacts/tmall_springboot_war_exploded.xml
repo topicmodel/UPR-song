@@ -153,6 +153,7 @@
           <element id="library" level="project" name="Maven: com.google.code:cjftransform:1.0.1" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.4" />
           <element id="library" level="project" name="Maven: org.jsoup:jsoup:1.10.3" />
+          <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.8.5" />
         </element>
       </element>
       <element id="directory" name="META-INF">

@@ -4,9 +4,14 @@
             var keyword = getUrlParms("keyword");
             var data4Vue = {
                 uri:'analyzeSchool',
+                heaturi:'heatphoto',
+                mapData:[],
                 keywords:[],
                 universitys:[],
-                keyword:keyword
+                keyword:keyword,
+                showReview:false,
+                showDetail:true,
+
         };
 
             //ViewModel
@@ -15,6 +20,7 @@
                 data: data4Vue,
                 mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
                     this.load();
+                    this.heat();
                 },
                 methods: {
                     load:function(){
@@ -23,10 +29,120 @@
                           /*  var result = response.data;
                             vue.universitys=result.data.university;*/
                             vue.universitys = response.data;
+
+                            /*Begin-柱状图画图开始*/
+                            var myChart = echarts.init(document.getElementById('main'));
+                            //数据加载完之前先显示一段简单的loading动画
+                            myChart.showLoading();
+                            var names=[];    //横坐标数组（实际用来盛放X轴坐标值）
+                            var numbers=[];    //纵坐标数组（实际用来盛放Y坐标值）
+                            for(var i=0;i<vue.universitys.length;i++){
+                                //console.log(result[i].name+result[i].number);
+                                names.push(vue.universitys[i].name);
+                                numbers.push(vue.universitys[i].number);
+                            }
+
+                            myChart.hideLoading();    //隐藏加载动画
+                            myChart.setOption({        //加载数据图表
+                                tooltip: {},
+                                legend: {
+                                    data:['相似专利数']
+                                },
+                                xAxis: {
+                                    data: names
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [{
+                                    // 根据名字对应到相应的系列
+                                    name: '相似专利数',
+                                    type: 'bar',
+                                    data: numbers
+                                }]
+                            });
+                            /*End-柱状图画图结束*/
                             vue.$nextTick(function(){
                                 linkDefaultActions();
                             })
                         });
+                    },
+
+                    /*Begin-热力图画图开始*/
+                    heat:function () {
+                        var url =  this.heaturi+"?keyword="+keyword;
+                        axios.post(url).then(function(response) {
+                            /*  var result = response.data;
+                              vue.universitys=result.data.university;*/
+                            vue.mapData = response.data;
+                            option = {
+                                title: {
+                                    text: '高校发明专利数量热力图',
+                                    //subtext: 'data from PM25.in',
+                                    left: 'center',
+                                    textStyle: {
+                                        color: '#fff'
+                                    }
+                                },
+                                backgroundColor: '#404a59',
+                                visualMap: {
+                                    min: 0,
+                                    max: 5,
+                                    splitNumber: 20,
+                                    inRange: {
+                                        color: ['#d94e5d', '#eac736', '#50a3ba'].reverse()
+                                    },
+                                    textStyle: {
+                                        color: '#fff'
+                                    }
+                                },
+                                geo: {
+                                    map: 'china',
+                                    label: {
+                                        emphasis: {
+                                            show: false
+                                        }
+                                    },
+                                    roam: true,
+                                    itemStyle: {
+                                        normal: {
+                                            areaColor: '#323c48',
+                                            borderColor: '#111'
+                                        },
+                                        emphasis: {
+                                            areaColor: '#2a333d'
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: '高校发明专利数量',
+                                    type: 'heatmap',
+                                    coordinateSystem: 'geo',
+                                    data: vue.mapData
+
+                                }]
+                            };
+                            $.get('js/china.json', function (chinaJson) {
+                                echarts.registerMap('china', chinaJson);
+                                var myChart = echarts.init(document.getElementById('mainheat'));
+                                myChart.setOption(option);
+                            });
+
+                            vue.$nextTick(function(){
+                                linkDefaultActions();
+                            })
+                        });
+                    },
+                    /*End-热力图画图开始*/
+
+                    /*两张图进行切换*/
+                    toggle2Detail:function(){
+                        this.showDetail=true;
+                        vue.showReview=false;
+                    },
+                    toggle2Review:function(){
+                        vue.showDetail=false;
+                        vue.showReview=true;
                     }
                 }
             });

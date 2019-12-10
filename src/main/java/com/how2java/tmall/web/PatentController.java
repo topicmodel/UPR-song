@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.how2java.tmall.util.LngAndLatUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -298,5 +299,58 @@ public class PatentController {
         map.put("link",links);
         return map;
     }
+    /**
+     * 热力图
+     */
+    @PostMapping("/heatphoto")
+    public Object heat(String keyword){
+        if (null == keyword) {
+            keyword = "";
+        }
+        List<Patent> ps = patentService.topicSearch("%"+keyword+"%");
+        List<String> persons = new ArrayList<String>();
+        //取出含有大学的applyPerson
+        for (Patent p : ps) {
 
+            if (p.getApplyPerson().contains("大学")) {
+                if (p.getApplyPerson().contains(";")) {
+                    continue;
+                }
+                persons.add(p.getApplyPerson());
+            }
+        }
+
+        Map<String,Integer> hashMap =new HashMap<>();
+        for(String str:persons){
+            if (str!=null || "".equals(str)) {
+                if(hashMap.containsKey(str)){
+                    hashMap.put(str,hashMap.get(str)+1);
+                }else{
+                    hashMap.put(str,1);
+                }
+            }
+        }
+        List<ApplyPerson> newPerson = new ArrayList<>();
+        for(Map.Entry<String,Integer> m:hashMap.entrySet()){
+            ApplyPerson applyPerson = new ApplyPerson();
+            applyPerson.setName(m.getKey());
+            applyPerson.setNumber(m.getValue());
+            newPerson.add(applyPerson);
+        }
+
+        List<List<Double>> mapData;   //需要返回前端的数据
+        mapData = new ArrayList<>();
+
+        for(int i=0;i<newPerson.size();i++){
+            List<Double> item = new ArrayList<>();    //每个数据点的数据
+            Map<String, Double> map = new HashMap<>();  //获取每个地址转换后的经纬度
+            System.err.println("location:"+newPerson.get(i).getName());
+            map = LngAndLatUtil.getLngAndLat(newPerson.get(i).getName());
+            item.add(map.get("lng"));    //经度
+            item.add(map.get("lat"));    // 纬度
+            item.add(Double.valueOf(newPerson.get(i).getNumber()));             //值
+            mapData.add(item);
+        }
+        return mapData;
+    }
 }
