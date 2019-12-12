@@ -45,7 +45,7 @@
             <img :src="'img/zhao1/zhao'+index+'.jpg'" style="width:1100px;height:300px">
     		<div class="carousel-caption" style="font-family:sans-serif;font-size:20px;font-weight: bold;margin-top:0px;text-align: center">
         		<div >主题{{index+1}}</div>
-        		<div>{{bean.name}}</div>
+        		<div>{{bean.topic}}</div>
       		</div>
       		
     </div>
@@ -73,8 +73,10 @@
 
 							<div style="width:200px;height:100px;border-radius:20%;background-color:#b0c4de;margin-bottom: 30px;margin-left:100px; float: left">
 
-							   <input id="wd" name="keyword" type="text" class="input_search" style="border: 0px ;background-color:#b0c4de;margin-top:15px;text-align:center;font-size: 15px;font-weight: bolder;" :value="bean.name"/>
-
+							   <input id="wd" name="keyword" type="text" class="input_search" style="border: 0px ;background-color:#b0c4de;margin-top:15px;text-align:center;font-size: 15px;font-weight: bolder;" :value="bean.topic"/>
+                                <span>
+                                    {{bean.keyword}}
+                                </span>
 								<button id="ok" name="ok" type="submit" value="提交" class="btn btn-sm" style="font-size: 15px;margin-top:10px;margin-left:58px;color: #2C3E50">
 									点击分析
 								</button>

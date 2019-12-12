@@ -58,7 +58,107 @@ public class TFIDFAnalyzer
 		}
 		return keywordList;
 	}
-	
+
+	public List<Keyword> analyze(String content){
+		List<Keyword> keywordList=new ArrayList<>();
+
+		if(stopWordsSet==null) {
+			stopWordsSet=new HashSet<>();
+			loadStopWords(stopWordsSet, this.getClass().getResourceAsStream("/jieba/stop_words.txt"));
+		}
+		if(idfMap==null) {
+			idfMap=new HashMap<>();
+			loadIDFMap(idfMap, this.getClass().getResourceAsStream("/jieba/idf_dict.txt"));
+		}
+
+		Map<String, Double> tfMap=getTF(content);
+		for(String word:tfMap.keySet()) {
+			// 若该词不在idf文档中，则使用平均的idf值(可能定期需要对新出现的网络词语进行纳入)
+			if(idfMap.containsKey(word)) {
+				keywordList.add(new Keyword(word,idfMap.get(word)*tfMap.get(word)));
+			}else
+				keywordList.add(new Keyword(word,idfMedian*tfMap.get(word)));
+		}
+		/*Collections.sort(keywordList);*/
+		Collections.sort(keywordList, new Comparator<Keyword>() {
+			@Override
+			public int compare(Keyword o1, Keyword o2) {  //必须有返回0的情况，否则报错
+				if ( o1.getTfidfvalue()>o2.getTfidfvalue()) return 1;
+				else if (o1.getTfidfvalue()==o2.getTfidfvalue())return 0;
+				else return -1;
+			}
+		});
+		return keywordList;
+	}
+	/**
+	 * 借鉴tfidf分析方法
+	 * @param content 需要分析的文本/文档内容
+	 * @param topN 需要返回的tfidf值最高的N个关键词，若超过content本身含有的词语上限数目，则默认返回全部
+	 * @return
+	 */
+	public List<String> analyzeTopic(String content,int topN){
+		List<Keyword> keywordList=new ArrayList<>();
+		List<String> keywords = new ArrayList<>();
+		if(stopWordsSet==null) {
+			stopWordsSet=new HashSet<>();
+			loadStopWords(stopWordsSet, this.getClass().getResourceAsStream("/jieba/stop_words.txt"));
+		}
+		if(idfMap==null) {
+			idfMap=new HashMap<>();
+			loadIDFMap(idfMap, this.getClass().getResourceAsStream("/jieba/idf_dict.txt"));
+		}
+
+		Map<String, Double> tfMap=getTF(content);
+		for(String word:tfMap.keySet()) {
+			// 若该词不在idf文档中，则使用平均的idf值(可能定期需要对新出现的网络词语进行纳入)
+			if(idfMap.containsKey(word)) {
+				keywordList.add(new Keyword(word,idfMap.get(word)*tfMap.get(word)));
+			}else
+				keywordList.add(new Keyword(word,idfMedian*tfMap.get(word)));
+		}
+
+		Collections.sort(keywordList);
+
+		//取出前10个词
+		if(keywordList.size()>topN) {
+			int num=keywordList.size()-topN;
+			for(int i=0;i<num;i++) {
+				keywordList.remove(topN);
+			}
+		}
+		//只返回保留的词
+		for (Keyword word : keywordList){
+			keywords.add(word.getName());
+		}
+		return keywords;
+	}
+
+	public List<String> analyzeTopic(String content){
+		List<Keyword> keywordList=new ArrayList<>();
+		List<String> keywords = new ArrayList<>();
+		if(stopWordsSet==null) {
+			stopWordsSet=new HashSet<>();
+			loadStopWords(stopWordsSet, this.getClass().getResourceAsStream("/jieba/stop_words.txt"));
+		}
+		if(idfMap==null) {
+			idfMap=new HashMap<>();
+			loadIDFMap(idfMap, this.getClass().getResourceAsStream("/jieba/idf_dict.txt"));
+		}
+
+		Map<String, Double> tfMap=getTF(content);
+		for(String word:tfMap.keySet()) {
+			// 若该词不在idf文档中，则使用平均的idf值(可能定期需要对新出现的网络词语进行纳入)
+			if(idfMap.containsKey(word)) {
+				keywordList.add(new Keyword(word,idfMap.get(word)*tfMap.get(word)));
+			}else
+				keywordList.add(new Keyword(word,idfMedian*tfMap.get(word)));
+		}
+		//只返回保留的词
+		for (Keyword word : keywordList){
+			keywords.add(word.getName());
+		}
+		return keywords;
+	}
 	/**
 	 * tf值计算公式
 	 * tf=N(i,j)/(sum(N(k,j) for all k))

@@ -1,13 +1,15 @@
 package com.how2java.tmall.web;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.Key;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.how2java.tmall.pojo.*;
+import com.how2java.tmall.pojo.TopicKeyword;
 import com.how2java.tmall.util.LngAndLatUtil;
+import com.how2java.tmall.util.lda.Corpus;
+import com.how2java.tmall.util.lda.LdaGibbsSampler;
+import com.how2java.tmall.util.lda.LdaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.how2java.tmall.pojo.ApplyPerson;
-import com.how2java.tmall.pojo.Inventor;
-import com.how2java.tmall.pojo.InventorLink;
-import com.how2java.tmall.pojo.InventorTopic;
-import com.how2java.tmall.pojo.Patent;
-import com.how2java.tmall.pojo.PatentInventor;
-import com.how2java.tmall.pojo.TopicLink;
 import com.how2java.tmall.service.InventorService;
 import com.how2java.tmall.service.PatentService;
 import com.how2java.tmall.util.Page4Navigator;
@@ -39,6 +34,13 @@ public class PatentController {
     @Autowired
     InventorService inventorService;
 
+    /**
+     * 通过分页查询所有专利
+     * @param start
+     * @param size
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/patents")
     public Page4Navigator<Patent> list(@RequestParam(value = "start", defaultValue = "0") int start, @RequestParam(value = "size", defaultValue = "5") int size) throws Exception {
         start = start < 0 ? 0 : start;
@@ -46,18 +48,37 @@ public class PatentController {
         return page;
     }
 
+    /**
+     * g根据专利id删除专利
+     * @param id
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @DeleteMapping("/patents/{id}")
     public String delete(@PathVariable("id") int id, HttpServletRequest request) throws Exception {
         patentService.delete(id);
         return null;
     }
 
+    /**
+     * 根据专利id获取专利数据
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/patents/{id}")
     public Patent get(@PathVariable("id") int id) throws Exception {
         Patent bean = patentService.get(id);
         return bean;
     }
 
+    /**
+     * 根据专利id更新专利信息
+     * @param bean
+     * @return
+     * @throws Exception
+     */
     @PutMapping("/patents/{id}")
     public Object update(@RequestBody Patent bean) throws Exception {
         //  System.out.println("bean:"+bean.toString());
@@ -67,24 +88,114 @@ public class PatentController {
     }
 
     /**
-     * 根据keyword检索专利
+     * 根据keyword检索专利，并进行主题建模
      *
      * @param keyword
      * @return
      */
     @PostMapping("/foresearch")
     public Object search(String keyword) {
-
-        List<Patent> ps = patentService.search("%"+keyword+"%");
-        String patentTitles = null;
-        for (Patent p : ps) {
-            patentTitles += p.getPatentTitle();
-        }
-        System.out.println("title:" + patentTitles);
-
+        //tf*idf分析器
         TFIDFAnalyzer tfidfAnalyzer = new TFIDFAnalyzer();
-        List<Keyword> list = tfidfAnalyzer.analyze(patentTitles, 9);
-        return list;
+
+        //根据关键词检索专利
+        List<Patent> ps = patentService.search("%"+keyword+"%");
+        //定义专利描述集合
+        List<String> descs = new ArrayList<>();
+        for (Patent p : ps) {
+            descs.add(p.getPatentDesc());
+        }
+
+/*        String strs = "";
+        for (String str : descs) {
+            strs += str;
+            //先合并文献获取每个词的值
+        }
+        System.err.println("合并："+strs);
+        //合併分詞計算結果
+        List<Keyword> keywords = tfidfAnalyzer.analyze(strs);
+        System.out.println("****************1*****************");
+
+        for (Keyword k : keywords) {
+            System.out.print(k.getName() + "," + k.getTfidfvalue() + ".");
+        }
+        System.out.println();
+        System.out.println("****************1*****************");*/
+
+        List<String> wordList = new LinkedList<String>();
+        //每件专利描述进行分词处理
+        for(String sentence : descs){
+
+            List<Keyword> finalWord = new ArrayList<>();
+            //获取分词结果以及对应的tf*idf值
+            List<Keyword> analyze = tfidfAnalyzer.analyze(sentence);
+            for(Keyword word : analyze){
+                //字符串长度小于2去除
+                if (word.getName().trim().length()<3){
+                    continue;
+                }
+                Keyword kw = new Keyword();
+
+                kw.setName(word.getName());
+                kw.setTfidfvalue(word.getTfidfvalue());
+                finalWord.add(kw);
+            }
+            //排序，从高到低
+            /*Collections.sort(finalWord);*/
+            Collections.sort(finalWord, new Comparator<Keyword>() {
+                @Override
+                public int compare(Keyword o1, Keyword o2) {  //必须有返回0的情况，否则报错
+                    if ( o2.getTfidfvalue()>o1.getTfidfvalue()) return 1;
+                    else if (o1.getTfidfvalue()==o2.getTfidfvalue())return 0;
+                    else return -1;
+                }
+            });
+            //保留值最高的10个词
+            if (finalWord.size() > 10) {
+                int num = finalWord.size() - 10;
+                for (int i = 0; i < num; i++) {
+                    finalWord.remove(10);
+                }
+            }
+            //取出词用于LDA模型
+            for (Keyword w : finalWord) {
+                wordList.add(w.getName());
+            }
+        }
+
+        //LDA语料库
+        Corpus corpus = new Corpus();
+        //添加到语料库中
+        corpus.addDocument(wordList);
+
+        // 2. Create a LDA sampler（构建LDA模型）
+        LdaGibbsSampler ldaGibbsSampler = new LdaGibbsSampler(corpus.getDocument(), corpus.getVocabularySize());
+        // 3. Train it（训练主题）
+        ldaGibbsSampler.gibbs(6);
+        // 4. The phi matrix is a LDA model, you can use LdaUtil to explain it.
+        double[][] phi = ldaGibbsSampler.getPhi();
+        //获取最相关的10个词
+        Map<String, Double>[] topicMap = LdaUtil.translate(phi, corpus.getVocabulary(), 5);
+
+        List<TopicKeyword> topicKeywords = new ArrayList<>();
+        for(Map<String, Double> map:topicMap){
+            String strss = "";
+            int i =0;
+            TopicKeyword topicKeyword = new TopicKeyword();
+            for(Map.Entry<String, Double> m:map.entrySet()){
+                if(i==0){
+                    topicKeyword.setTopic(m.getKey());
+                }
+                i++;
+                String str = m.getKey()+",";
+                strss  += str;
+            }
+            topicKeyword.setKeyword(strss);
+            topicKeywords.add(topicKeyword);
+        }
+
+
+        return topicKeywords;
     }
 
     /**
@@ -300,10 +411,11 @@ public class PatentController {
         return map;
     }
     /**
-     * 热力图
+     * 热力图绘制
      */
     @PostMapping("/heatphoto")
     public Object heat(String keyword){
+        //根据关键词检索专利
         if (null == keyword) {
             keyword = "";
         }
@@ -319,7 +431,7 @@ public class PatentController {
                 persons.add(p.getApplyPerson());
             }
         }
-
+        //将所有大学组成List集合
         Map<String,Integer> hashMap =new HashMap<>();
         for(String str:persons){
             if (str!=null || "".equals(str)) {
@@ -337,10 +449,10 @@ public class PatentController {
             applyPerson.setNumber(m.getValue());
             newPerson.add(applyPerson);
         }
-
-        List<List<Double>> mapData;   //需要返回前端的数据
+        //需要返回前端的数据
+        List<List<Double>> mapData;
         mapData = new ArrayList<>();
-
+        //设置大学的经纬度、以及专利数量
         for(int i=0;i<newPerson.size();i++){
             List<Double> item = new ArrayList<>();    //每个数据点的数据
             Map<String, Double> map = new HashMap<>();  //获取每个地址转换后的经纬度

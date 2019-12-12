@@ -10,6 +10,10 @@ public class Keyword implements Comparable<Keyword>
 {
 	private double tfidfvalue;
 	private String name;
+
+	public Keyword() {
+	}
+
 	/**
 	 * @return the tfidfvalue
 	 */

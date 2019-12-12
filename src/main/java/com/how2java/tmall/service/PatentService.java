@@ -54,20 +54,22 @@ public class PatentService {
      */
     public List<Patent> search(String keyword){
      
-        List<Patent> patents = patentDAO.findByPatentTitleLike("%" + keyword + "%");
+        /*List<Patent> patents = patentDAO.findByPatentTitleLike("%" + keyword + "%");*/
+        List<Patent> patents = patentDAO.findByPatentDescLike("%" + keyword + "%");
         return patents;
     }
 
     public List<Patent> topicSearch(String keyword){
 
-        List<Patent> patents = patentDAO.findByPatentTitleLike("%" + keyword + "%");
+        /*List<Patent> patents = patentDAO.findByPatentTitleLike("%" + keyword + "%");*/
+        List<Patent> patents = patentDAO.findByPatentDescLike("%" + keyword + "%");
         return patents;
     }
     /**
      * 根据关键词和university检索
      */
     public List<Patent> inventorSearch(String university ,String keyword){
-        List<Patent> patents = patentDAO.findByApplyPersonLikeAndPatentTitleLike(university, keyword);
+        List<Patent> patents = patentDAO.findByApplyPersonLikeAndPatentDescLike(university, "%"+keyword+"%");
         return patents;
     }
 
