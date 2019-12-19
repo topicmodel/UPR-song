@@ -54,20 +54,22 @@
         font: 15px arial;
     }
     .input_search{
-        width:500px;
+        width:400px;
         height:30px;
-        float:left;
+        
+       
     }
     .button_ok{
-        width: 100px;
+        width: 150px;
         height: 30px;
         color: #fff;
         font-size: 15px;
         letter-spacing: 1px;
         background:#2b669a;
         border:0;
-        outline: medium;
-        float:left;
+        outline: medium;  
+        margin-top:50px; 
+        margin-left: 90px;  
     }
 </style>
 
@@ -88,15 +90,28 @@
     </div>
 
     <!--加form表单-->
-    <form action="search" method="get">
+    <form action="search" method="get" style="float: left">
         <div class="div_search">
             <input id="wd" name="keyword" type="text" class="input_search" placeholder="请输入技术领域" />
-            <button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
-                搜索
-            </button>
+            <div>
+            	<button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
+                   最佳高校查询
+           		 </button>
+            </div>
         </div>
     </form>
 
+    <!--加form表单-->
+    <form action="search1" method="get" style="float: left">
+        <div class="div_search">
+            <input id="wd" name="keyword" type="text" class="input_search" placeholder="请输入技术领域" />
+            <div>
+           		 <button id="ok" name="ok" type="submit" value="提交" class="button_ok" style="float: left">
+                   竞争企业查询
+           		 </button>
+            </div>
+        </div>
+    </form>
     <div class="div_foot">
         <a>Copyright&nbsp;@&nbsp;2019-2022&nbsp;&nbsp;IUC版权所有 使用IUC前必读</a>
         <a>意见反馈</a>

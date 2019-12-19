@@ -105,17 +105,27 @@ public class ForePageController {
 	public String inventorDetail(){
 		return "fore/inventorDetail";
 	}
-	//请求页面
+	//请求高校页面
 	@GetMapping(value="/search")
 	public String searchResult(){
 		return "fore/search";
 	}
+	//请求企业页面
+		@GetMapping(value="/search1")
+		public String searchResult1(){
+			return "fore/search1";
+		}
 
-	//热词请求页面
+	//热词请求高校页面
 	@GetMapping(value="/topicSearch")
 	public String topicSearchResult(){
 		return "fore/topicSearch";
 	}
+	//热词请求企业页面
+		@GetMapping(value="/topicSearch1")
+		public String topicSearchResult1(){
+			return "fore/topicSearch1";
+		}
 
 	@GetMapping("/forelogout")
 	public String logout(HttpSession session) {

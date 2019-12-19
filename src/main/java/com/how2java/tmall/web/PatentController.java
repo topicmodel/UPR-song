@@ -130,7 +130,7 @@ public class PatentController {
             //获取分词结果以及对应的tf*idf值
             List<Keyword> analyze = tfidfAnalyzer.analyze(sentence);
             for(Keyword word : analyze){
-                //字符串长度小于2去除
+                //字符串长度小于3去除
                 if (word.getName().trim().length()<3){
                     continue;
                 }
@@ -199,7 +199,7 @@ public class PatentController {
     }
 
     /**
-     * 根据topicWords检索专利,并返回专利权人
+     * 高校 。根据topicWords检索专利,并返回专利权人
      *
      * @param keyword
      * @return
@@ -239,7 +239,7 @@ public class PatentController {
             applyPerson.setNumber(m.getValue());
             newPerson.add(applyPerson);
         }*/
-        //Begin：高校名称+高校数量
+        //Begin：高校名称+高校相似专利数量
         List<ApplyPerson> applyPersons = new ArrayList<>();
         for (String str : persons) {
             ApplyPerson applyPerson = new ApplyPerson();
@@ -267,12 +267,69 @@ public class PatentController {
         for (ApplyPerson person : hashMap.values()) {
             newPerson.add(person);
         }
-        //End：高校名称+高校数量
+        //End：高校名称+高校相似专利数量
 
         Collections.sort(newPerson);
 
         return newPerson;
 
+    }
+    /**
+     * 企业 。根据topicWords检索专利,并返回专利权人
+     *
+     * @param keyword
+     * @return
+     */
+    @PostMapping("/analyzeCompany")
+    public Object topicSearch1(String keyword) {
+        if (null == keyword) {
+            keyword = "";
+        }
+        List<Patent> ps = patentService.topicSearch("%"+keyword+"%");
+        List<String> persons = new ArrayList<String>();
+        //取出含有公司的applyPerson
+        for (Patent p : ps) {
+
+            if (p.getApplyPerson().contains("公司")) {
+                if (p.getApplyPerson().contains(";")) {
+                    continue;
+                }
+                persons.add(p.getApplyPerson());
+            }
+        }
+        //Begin：企业名称+企业相似专利数量
+        List<ApplyPerson> applyPersons = new ArrayList<>();
+        for (String str : persons) {
+            ApplyPerson applyPerson = new ApplyPerson();
+            applyPerson.setName(str);
+            applyPerson.setNumber(1);
+            applyPersons.add(applyPerson);
+        }
+
+        Map<String, ApplyPerson> hashMap = new HashMap<>();
+        for (ApplyPerson person : applyPersons) {
+            if (person.getName() != null || "".equals(person.getName())) {
+                if (hashMap.containsKey(person.getName())) {
+                    int num = person.getNumber();
+                    num += hashMap.get(person.getName()).getNumber();
+                    hashMap.get(person.getName()).setNumber(num);
+                } else {
+                    hashMap.put(person.getName(), person);
+                }
+            }
+        }
+
+        List<ApplyPerson> newPerson = new ArrayList<>();
+
+
+        for (ApplyPerson person : hashMap.values()) {
+            newPerson.add(person);
+        }
+        //End：企业名称+企业相似专利数量
+
+        Collections.sort(newPerson);
+
+        return newPerson;
     }
     /**
      * 根据university和keyword检索专利，并返回发明人

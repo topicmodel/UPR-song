@@ -58,8 +58,20 @@ public class PatentService {
         List<Patent> patents = patentDAO.findByPatentDescLike("%" + keyword + "%");
         return patents;
     }
+    public List<Patent> search1(String keyword){
+        
+        /*List<Patent> patents = patentDAO.findByPatentTitleLike("%" + keyword + "%");*/
+        List<Patent> patents = patentDAO.findByPatentDescLike("%" + keyword + "%");
+        return patents;
+    }
 
     public List<Patent> topicSearch(String keyword){
+
+        /*List<Patent> patents = patentDAO.findByPatentTitleLike("%" + keyword + "%");*/
+        List<Patent> patents = patentDAO.findByPatentDescLike("%" + keyword + "%");
+        return patents;
+    }
+    public List<Patent> topicSearch1(String keyword){
 
         /*List<Patent> patents = patentDAO.findByPatentTitleLike("%" + keyword + "%");*/
         List<Patent> patents = patentDAO.findByPatentDescLike("%" + keyword + "%");

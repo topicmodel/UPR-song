@@ -63,24 +63,19 @@
   </a>
  
 </div>
-
-
 	<div class="searchProducts">
 		<div class="listDataTableDiv">		
 				<div v-for="bean in keywords">
 					<div style="margin-top: 30px">
 						<form action="topicSearch" method="get">
-
-							<div style="width:200px;height:100px;border-radius:20%;background-color:#b0c4de;margin-bottom: 30px;margin-left:100px; float: left">
-
+							<div style="width:250px;height:100px;border-radius:20%;background-color:#b0c4de;margin-bottom: 30px;margin-left:100px; float: left">
 							   <input id="wd" name="keyword" type="text" class="input_search" style="border: 0px ;background-color:#b0c4de;margin-top:15px;text-align:center;font-size: 15px;font-weight: bolder;" :value="bean.topic"/>
                                 <span>
                                     {{bean.keyword}}
                                 </span>
-								<button id="ok" name="ok" type="submit" value="提交" class="btn btn-sm" style="font-size: 15px;margin-top:10px;margin-left:58px;color: #2C3E50">
-									点击分析
+								<button id="ok" name="ok" type="submit" value="提交" class="btn btn-sm" style="font-size: 15px;margin-top:10px;margin-left:20px;color: #2C3E50;float:left">
+									高校分析
 								</button>
-								
 							</div>
 						</form>
 					</div>
