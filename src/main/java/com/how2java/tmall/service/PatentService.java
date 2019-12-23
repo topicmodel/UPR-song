@@ -65,6 +65,11 @@ public class PatentService {
         return patents;
     }
 
+    /**
+     * 根据关键词查询专利
+     * @param keyword
+     * @return
+     */
     public List<Patent> topicSearch(String keyword){
 
         /*List<Patent> patents = patentDAO.findByPatentTitleLike("%" + keyword + "%");*/
@@ -81,7 +86,7 @@ public class PatentService {
      * 根据关键词和university检索
      */
     public List<Patent> inventorSearch(String university ,String keyword){
-        List<Patent> patents = patentDAO.findByApplyPersonLikeAndPatentDescLike(university, "%"+keyword+"%");
+        List<Patent> patents = patentDAO.findByApplyPersonLikeAndPatentDescLike("%"+university+"%", "%"+keyword+"%");
         return patents;
     }
 

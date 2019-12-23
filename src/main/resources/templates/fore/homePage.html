@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <meta charset="utf-8">
-<title>IUC-主题检索</title>
+<title>IUC-首页</title>
 <style>
     a {
         color:#999;
@@ -11,12 +11,12 @@
         height:100%
     }
     body{
-       background-size: 100%;
-	   background:url(img/zhao/zhao2.jpg) no-repeat; 
-	   background-size:cover;
-	   background-position:center;
-	   height:500px;
-					}
+        background-size: 100%;
+        background:url(img/zhao/homePic.jpg) no-repeat;
+        background-size:cover;
+        background-position:center;
+        height:500px;
+    }
     }
     .background{
         opacity: 0.5;
@@ -56,8 +56,8 @@
     .input_search{
         width:400px;
         height:30px;
-        
-       
+
+
     }
     .button_ok{
         width: 150px;
@@ -67,19 +67,14 @@
         letter-spacing: 1px;
         background:#2b669a;
         border:0;
-        outline: medium;  
-        margin-top:50px; 
-        margin-left: 90px;  
+        outline: medium;
+        margin-top:50px;
+        margin-left: 90px;
     }
 </style>
-
 <body>
 <div id="workingArea">
     <div class="background"></div>
-<!--    <div class="div_head">
-        <a class="h1" href="login.html">立即登录&nbsp;</a>
-        <a class="h2" href="register.html">免费注册</a>
-    </div>-->
     <div th:replace="include/fore/top::html" ></div>
 
     <div class="div_head1" style="width:100%;height:80px;margin-top:85px;">
@@ -90,28 +85,23 @@
     </div>
 
     <!--高校查询-加form表单-->
-    <form action="search" method="get" style="float: left">
-        <div class="div_search">
-            <input id="wd" name="keyword" type="text" class="input_search" placeholder="请输入技术领域" />
-            <div>
-            	<button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
-                   最佳高校查询
-           		 </button>
-            </div>
-        </div>
-    </form>
+    <div>
+        <a th:href="demand">
+            <button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
+                需求推荐
+            </button>
+        </a>
+    </div>
 
     <!--企业查询-加form表单-->
-    <form action="companySearch" method="get" style="float: left">
-        <div class="div_search">
-            <input id="wd" name="keyword" type="text" class="input_search" placeholder="请输入技术领域" />
-            <div>
-           		 <button id="ok" name="ok" type="submit" value="提交" class="button_ok" style="float: left">
-                   竞争企业查询
-           		 </button>
-            </div>
-        </div>
-    </form>
+     <div>
+         <a th:href="center">
+           	<button id="ok" name="ok" type="submit" value="提交" class="button_ok" style="float: left">
+               主题推荐
+           	</button>
+         </a>
+     </div>
+
     <div class="div_foot">
         <a>Copyright&nbsp;@&nbsp;2019-2022&nbsp;&nbsp;IUC版权所有 使用IUC前必读</a>
         <a>意见反馈</a>

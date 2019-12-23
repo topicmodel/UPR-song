@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.how2java.tmall.pojo.*;
 import com.how2java.tmall.pojo.TopicKeyword;
 import com.how2java.tmall.util.LngAndLatUtil;
+import com.how2java.tmall.util.MySimHash;
 import com.how2java.tmall.util.lda.Corpus;
 import com.how2java.tmall.util.lda.LdaGibbsSampler;
 import com.how2java.tmall.util.lda.LdaUtil;
@@ -193,8 +194,6 @@ public class PatentController {
             topicKeyword.setKeyword(strss);
             topicKeywords.add(topicKeyword);
         }
-
-
         return topicKeywords;
     }
 
@@ -344,6 +343,7 @@ public class PatentController {
         //发明人链条集合
         List<InventorLink>  links = new ArrayList<>();
         List<String> inventors =new ArrayList<>();
+
         //关系链条整理
         for(Patent p: patents){
             String patentInventor = p.getPatentInventor();
@@ -358,7 +358,7 @@ public class PatentController {
             String[] split = str.split(";");
 
             for(int i=1;i<split.length;i++){
-               // System.out.println(split[i-1]);
+                // System.out.println(split[i-1]);
                 InventorLink link = new InventorLink();
                 link.setSource(split[i-1]);
                 link.setTarget(split[i]);
@@ -367,7 +367,7 @@ public class PatentController {
             }
 
         }
-       // System.err.println(patents.size());
+        // System.err.println(patents.size());
         //创建发明人集合
         List<String> patentinventors = new ArrayList<>();
 
@@ -407,7 +407,116 @@ public class PatentController {
         Map<String,Object> hashMap = new HashMap<>();
         hashMap.put("link",links);
         hashMap.put("inventor",patentInventors);
+        hashMap.put("patents",patents);
+        return hashMap;
+    }
+    /**
+     * 根据company和keyword检索专利，并返回企业发明人
+     *
+     */
+    @PostMapping("/analyseCompanyInventor")
+    public Object companyInventorSearch(String company, String keyword) {
+        //企业专利检索
+        List<Patent> patents = patentService.inventorSearch(company, "%"+keyword+"%");
+        //高校专利检索-模糊查询
+        List<Patent> universityPatents = patentService.inventorSearch("大学", "%"+keyword+"%");
+        //存储计算相似度后的专利
+        List<SimilarPatent> similarPatents = new ArrayList<>();
+        //计算高校每件专利与企业专利的相似度并放入到相似度专利集合中
+        for( int i =0;i<universityPatents.size();i++){
+            Double sumSimilarValue = 0.0;
+            for(int j=0;j<patents.size();j++){
+                String uniPatentTitle = universityPatents.get(i).getPatentTitle();
+                String comPatentTitle = patents.get(j).getPatentTitle();
+                MySimHash hash1 = new MySimHash(uniPatentTitle, 64);
+                MySimHash hash2 = new MySimHash(comPatentTitle, 64);
+                sumSimilarValue+=hash1.getSemblance(hash2);
+            }
+            Double avgSimilarValue = sumSimilarValue/patents.size();
+            SimilarPatent similarPatent = new SimilarPatent();
+            similarPatent.setApplyPerson(universityPatents.get(i).getApplyPerson());
+            similarPatent.setPatentDesc(universityPatents.get(i).getPatentDesc());
+            similarPatent.setPatentInventor(universityPatents.get(i).getPatentInventor());
+            similarPatent.setPatentTitle(universityPatents.get(i).getPatentTitle());
+            similarPatent.setSimilarValue(avgSimilarValue);
+            similarPatents.add(similarPatent);
+        }
+        Collections.sort(similarPatents);
+        if(similarPatents.size()>10) {
+            int num=similarPatents.size()-10;
+            for(int i=0;i<num;i++) {
+                similarPatents.remove(10);
+            }
+        }
+        //发明人链条集合
+        List<InventorLink>  links = new ArrayList<>();
+        List<String> inventors =new ArrayList<>();
 
+        //关系链条整理
+        for(Patent p: patents){
+            String patentInventor = p.getPatentInventor();
+            inventors.add(patentInventor);
+        }
+
+        for(String str:inventors){
+
+            if(str.indexOf(";")==0){
+                continue;
+            }
+            String[] split = str.split(";");
+
+            for(int i=1;i<split.length;i++){
+                // System.out.println(split[i-1]);
+                InventorLink link = new InventorLink();
+                link.setSource(split[i-1]);
+                link.setTarget(split[i]);
+                link.setName("合作");
+                links.add(link);
+            }
+
+        }
+        // System.err.println(patents.size());
+        //创建发明人集合
+        List<String> patentinventors = new ArrayList<>();
+
+        //装发明人
+        for (Patent p:patents){
+            String inventorNames = p.getPatentInventor();
+            if(inventorNames.indexOf(";")!=0){
+                String[] strInventor = inventorNames.split(";");
+                for(String str:strInventor){
+                    patentinventors.add(str);
+                }
+            }else{
+                patentinventors.add(inventorNames);
+            }
+        }
+
+        //统计发明人数
+        Map<String,Integer> map = new HashMap<>();
+        for(String str:patentinventors){
+            if(str !=null || "".equals(str)){
+                if(map.containsKey(str)){
+                    map.put(str,map.get(str)+1);
+                }else {
+                    map.put(str,1);
+                }
+            }
+        }
+        List<PatentInventor> patentInventors = new ArrayList<>();
+        for(Map.Entry<String,Integer> m:map.entrySet()){
+            PatentInventor inventor =new PatentInventor();
+            inventor.setInventorName(m.getKey());
+            inventor.setInventorNum(m.getValue());
+            patentInventors.add(inventor);
+        }
+        Collections.sort(patentInventors);
+
+        Map<String,Object> hashMap = new HashMap<>();
+        hashMap.put("link",links);
+        hashMap.put("inventor",patentInventors);
+        hashMap.put("patents",patents);
+        hashMap.put("similar",similarPatents);
         return hashMap;
     }
     //发明人详情资料
@@ -521,5 +630,43 @@ public class PatentController {
             mapData.add(item);
         }
         return mapData;
+    }
+    /**
+     * 用户专利需求匹配
+     */
+    @PostMapping(value = "/matchdemand")
+    public Object matchDemand(@RequestBody Demand bean){
+        System.err.println(bean.getName()+","+bean.getDesc());
+        String demandName = bean.getName();
+        List<Patent> universityPatents = patentService.list();
+        System.out.println(universityPatents.size());
+        MySimHash demandHash = new MySimHash(demandName, 64);
+        //存储计算相似度后的专利
+        List<SimilarPatent> similarPatents = new ArrayList<>();
+        //计算高校每件专利与企业专利的相似度并放入到相似度专利集合中
+        for( int i =0;i<universityPatents.size();i++){
+            Double SimilarValue = 0.0;
+            String uniPatentTitle = universityPatents.get(i).getPatentTitle();
+            MySimHash uniPatentHash= new MySimHash(uniPatentTitle, 64);
+            SimilarValue = uniPatentHash.getSemblance(demandHash);
+            SimilarPatent similarPatent = new SimilarPatent();
+            similarPatent.setApplyPerson(universityPatents.get(i).getApplyPerson());
+            similarPatent.setPatentDesc(universityPatents.get(i).getPatentDesc());
+            similarPatent.setPatentInventor(universityPatents.get(i).getPatentInventor());
+            similarPatent.setPatentTitle(universityPatents.get(i).getPatentTitle());
+            similarPatent.setSimilarValue(SimilarValue);
+            similarPatents.add(similarPatent);
+        }
+        Collections.sort(similarPatents);
+        for(SimilarPatent p:similarPatents){
+            System.err.println(p.getSimilarValue());
+        }
+        if(similarPatents.size()>10) {
+            int num=similarPatents.size()-10;
+            for(int i=0;i<num;i++) {
+                similarPatents.remove(10);
+            }
+        }
+        return similarPatents;
     }
 }

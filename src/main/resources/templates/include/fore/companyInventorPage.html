@@ -1,23 +1,25 @@
 <div class th:fragment="html">
     <script>
         $(function(){
-            var university =  getUrlParms("university");
+            var company =  getUrlParms("company");
             var keyword = getUrlParms("keyword");
-
+            console.log(company+","+keyword);
             //图表
 
             var data4Vue = {
-                uri:'analyseInventor',
+                uri:'analyseCompanyInventor',
                 keywords:[],
                 inventors:[],
                 patents:[],
+                similarPatents:[],
                 name:{name:''},
                 personnames:[],
                 link:{target:'',source:'',name:''},
                 personlinks:[],
-                university:university,
+                university:company,
                 showNetwork:true,
-                showPatentList:false
+                showPatentList:false,
+                showSimilarPatent:false
         };
 
             //ViewModel
@@ -30,13 +32,16 @@
                 methods: {
                     load:function(){
 
-                        var url =  this.uri+"?university="+university+"&keyword="+keyword;
+                        var url =  this.uri+"?company="+company+"&keyword="+keyword;
+                        console.log(url);
                         //获取数据
                         axios.post(url).then(function(response) {
+
                           var result = response.data;
                             vue.links=result.link;
                             vue.inventors = result.inventor;
                             vue.patents = result.patents;
+                            vue.similarPatents = result.similar;
 
                             for(var j=0;j<vue.links.length;j++){
                                 vue.link.target = vue.links[j].target;
@@ -55,7 +60,7 @@
                             console.log(vue.name[0]);
                             var myChart = echarts.init(document.getElementById('main'));
                             //数据加载完之前先显示一段简单的loading动画
-                            /*myChart.showLoading();*/
+                            //myChart.showLoading();
                             //网络图显示
                             option = {
                                 title: {
@@ -137,10 +142,17 @@
                     toggle2Detail:function(){
                         vue.showNetwork=true;
                         vue.showPatentList=false;
+                        vue.showSimilarPatent = false;
                     },
                     toggle2Review:function(){
                         vue.showNetwork=false;
                         vue.showPatentList=true;
+                        vue.showSimilarPatent = false;
+                    },
+                    toggle2Similar:function(){
+                        vue.showNetwork=false;
+                        vue.showPatentList=false;
+                        vue.showSimilarPatent = true;
                     }
                 }
             });
@@ -149,7 +161,7 @@
 
     <div id="topicSearchResult">
         <div class="topicSearchResultDiv">
-            <div th:replace="include/fore/patentsByInventorSearch::html" ></div>
+            <div th:replace="include/fore/companyInventorShow::html" ></div>
         </div>
     </div>
 </div>
