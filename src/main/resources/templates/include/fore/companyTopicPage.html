@@ -14,7 +14,7 @@
   }
 </style>
 <div class="p1" style="font-size: 25px;margin-top: 20px;margin-bottom:20px;text-align:center;font-weight: bold">热门子领域分析</div>
-        <div class="c1" style="border: 4px solid darkolivegreen;margin-bottom:30px;margin-top: 15px"></div>
+        <div class="c1" style="border: 4px solid #003D79;margin-bottom:30px;margin-top: 15px"></div>
 <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
   <!-- Indicators -->
   <ol class="carousel-indicators">
@@ -35,7 +35,7 @@
   <!-- Wrapper for slides -->
   <div class="carousel-inner" role="listbox">
     <div class="item active">
-      <img src="img/zhao/zhao1.jpg" style="width:1100px;height:300px">
+      <img src="img/zhao/uniPage.jpg" style="width:1100px;height:300px">
     		<div class="carousel-caption" style="font-family:sans-serif;font-size:20px;font-weight: bold;margin-top:0px;text-align: center">
         		欢迎
      		 </div>
@@ -68,12 +68,12 @@
 				<div v-for="bean in keywords">
 					<div style="margin-top: 30px">
 						<form action="companyTopicSearch" method="get">
-							<div style="width:250px;height:100px;border-radius:20%;background-color:#b0c4de;margin-bottom: 30px;margin-left:100px; float: left">
-							   <input id="wd" name="keyword" type="text" class="input_search" style="border: 0px ;background-color:#b0c4de;margin-top:15px;text-align:center;font-size: 15px;font-weight: bolder;" :value="bean.topic"/>
-                                <span>
+							<div style="width:300px;height:120px;border-radius:30%;background-color:#b0c4de;margin-bottom: 30px;margin-left:160px; float: left">
+							   <input id="wd" name="keyword" type="text" size="5" class="input_search" style="border: 0px ;background-color:#b0c4de;margin-top:15px;margin-left:110px;font-size: 20px;font-weight: bolder;margin-right: 100px" :value="bean.topic"/>
+                                <span style="margin-left: 25px">
                                     {{bean.keyword}}
                                 </span>
-								<button id="ok" name="ok" type="submit" value="提交" class="btn btn-sm" style="font-size: 15px;margin-top:10px;margin-left:20px;color: #2C3E50;float:left">
+								<button id="ok" name="ok" type="submit" value="提交" class="btn btn-sm" style="font-size: 15px;margin-top:10px;margin-left:100px;color: #2C3E50;float:left">
 									企业分析
 								</button>
 							</div>

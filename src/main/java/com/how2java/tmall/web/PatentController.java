@@ -188,7 +188,7 @@ public class PatentController {
                     topicKeyword.setTopic(m.getKey());
                 }
                 i++;
-                String str = m.getKey()+",";
+                String str = m.getKey()+" ";
                 strss  += str;
             }
             topicKeyword.setKeyword(strss);

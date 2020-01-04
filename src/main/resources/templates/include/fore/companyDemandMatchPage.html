@@ -39,22 +39,24 @@
         })
     </script>
 
-    <div class="panel panel-warning addDiv" align="center">
-        <div class="panel-body">
+    <div class="panel panel-warning addDiv" align="center" style="background-image: url('img/zhao/demandMatch.jpg');background-repeat: no-repeat;background-size:100% 100%">
+        <div>
+        	<h2 style="margin-left: 600px">需求推荐</h2>
+        </div>
+        <div class="panel-body" style="margin-left:550px">
             <table class="addTable">
                 <tr>
-                    <td>需求名称</td>
-                    <td><input  @keyup.enter="add" v-model.trim="bean.name" type="text" class="form-control"></td>
+                    <td style="font-size: 20px;font-family: serif; ;font-weight: bold;">需求名称</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.name" type="text" class="form-control" style="height:80px;width:400px;margin-top:20px" placeholder="请输入需求名称..."></td>
                 </tr>
                 <tr>
-                    <td>需求详情</td>
-                    <td><input  @keyup.enter="add" v-model.trim="bean.desc"  type="text"
-                                class="form-control"></td>
+                    <td style="font-size: 20px;font-family: serif;font-weight: bold;">需求详情</td>
+                    <td><input  @keyup.enter="add" v-model.trim="bean.desc"  type="text" class="form-control" style="height:300px;width:400px;margin-top:20px;" placeholder="请输入详细需求......"></td>
                 </tr>
 
                 <tr class="submitTR">
                     <td colspan="2" align="center">
-                        <button href="#nowhere"  @click="add" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+                        <button href="#nowhere"  @click="add" class="btn btn-success" data-toggle="modal" data-target="#myModal" style="margin-top:20px;margin-left: 100px;background-color: #003D79">
                             专利匹配
                         </button>
                     </td>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <meta charset="utf-8">
-<title>IUC-主题检索</title>
+<title>UPR-主题检索</title>
 <style>
     a {
         color:#999;
@@ -11,12 +11,11 @@
         height:100%
     }
     body{
-       background-size: 100%;
-	   background:url(img/zhao/zhao2.jpg) no-repeat; 
-	   background-size:cover;
-	   background-position:center;
-	   height:500px;
-					}
+       height:500px;
+       background-image:url(img/zhao/centerPic1.jpg),url(img/zhao/centerPic2.jpg);
+       background-repeat: no-repeat, no-repeat; 
+       background-size:50% 100%,50% 100%; 
+       background-position:top left,top right;  
     }
     .background{
         opacity: 0.5;
@@ -74,27 +73,24 @@
 </style>
 
 <body>
-<div id="workingArea">
+<div id="workingArea" >
     <div class="background"></div>
-<!--    <div class="div_head">
-        <a class="h1" href="login.html">立即登录&nbsp;</a>
-        <a class="h2" href="register.html">免费注册</a>
-    </div>-->
     <div th:replace="include/fore/top::html" ></div>
 
     <div class="div_head1" style="width:100%;height:80px;margin-top:85px;">
-        <h1 class="h3" style="text-align: center;font-weight:bolder;font-family:Courier New 9pt;font-size: 80px;color: #000077;">I&nbsp;U&nbsp;C</h1>
+        <h1 class="h3" style="text-align: center;font-weight:bolder;font-family:Courier New 9pt;font-size: 80px;font-style: italic;color: #3C3C3C;">V&nbsp;S</h1>
     </div>
     <div class="div_head2" style=" width:100%;height:40px;margin-top:5px;">
-        <h2 class="h4" style="margin-top: 15px;text-align: center;font-weight:bold;font-family:blackadder itc;font-size: 20px;color: #000066;">—&nbsp;最佳团队&nbsp; 合作创新&nbsp;—</h2>
+        <h2 class="h4" style="margin-top: 15px;text-align: center;font-weight:bold;font-family:blackadder itc;font-size: 20px;font-style: italic;color: #3C3C3C;">—&nbsp;最佳团队&nbsp; 合作创新&nbsp;—</h2>
     </div>
 
     <!--高校查询-加form表单-->
-    <form action="search" method="get" style="float: left">
+    <img src="img/zhao/company.png" width="80px" height="80px" style="margin-left:-950px">
+    <form action="search" method="get" style="margin-top:90px;float: left">
         <div class="div_search">
             <input id="wd" name="keyword" type="text" class="input_search" placeholder="请输入技术领域" />
             <div>
-            	<button id="ok" name="ok" type="submit" value="提交" class="button_ok" >
+            	<button id="ok" name="ok" type="submit" value="提交" class="button_ok" style="background-color: #003D79">
                    最佳高校查询
            		 </button>
             </div>
@@ -102,11 +98,12 @@
     </form>
 
     <!--企业查询-加form表单-->
-    <form action="companySearch" method="get" style="float: left">
+    <img src="img/zhao/company.png" width="80px" height="80px" style="margin-left:550px">
+    <form action="companySearch" method="get" style="margin-top:90px;float: left;">
         <div class="div_search">
             <input id="wd" name="keyword" type="text" class="input_search" placeholder="请输入技术领域" />
             <div>
-           		 <button id="ok" name="ok" type="submit" value="提交" class="button_ok" style="float: left">
+           		 <button id="ok" name="ok" type="submit" value="提交" class="button_ok" style="float: left;background-color: #9F5000">
                    竞争企业查询
            		 </button>
             </div>

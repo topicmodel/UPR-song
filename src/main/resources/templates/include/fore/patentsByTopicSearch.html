@@ -2,11 +2,11 @@
     <script src="js/jquery/2.0.0/jquery.min.js"></script>
     <script src="js/echarts.min.js"></script>
     <div class="searchProducts">
-        <div class="listDataTableDiv" style="width: 25%;float: left">
+        <div class="listDataTableDiv" style="width: 25%;float: left;margin-top: 50px;margin-left: 30px">
             <table class="table table-striped table-bordered table-hover  table-condensed">
+                <div style="text-align: center;margin-bottom: 20px;font-size: 20px;font-weight: bold;">高校相似专利列表</div>
                 <tr class="success" style="font-size: 15px">
-                    <th>高校名称&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;相似专利件数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 点击分析</th>
-                  
+                    <th style="background-color: #8E8E8E">高校名称&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;相似专利件数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 点击分析</th>      
                 </tr>
                 </thead>
                 <tbody>
@@ -32,7 +32,7 @@
             </table>
         </div>
 
-        <div id="uniECharts" style="width: 75%;float: left;margin-top: 50px;margin-left: auto">
+        <div id="uniECharts" style="width: 70%;float: left;margin-top: 20px;margin-left: -10px">
             <!--<div>
                 <button>高校发明专利排名</button>
                 <a href="#nowhere" @click="heat">高校发明专利热力图</a>
@@ -43,19 +43,19 @@
                 <a style="font-size: 15px;font-weight: bold">高校发明专利排名</a>&nbsp;&nbsp;<span>/</span>&nbsp;&nbsp;
                 <a href="#nowhere" @click="toggle2Review">高校发明专利热力图</a>
 
-                    <div id="main" style="width: 1000px;height:600px;"></div>
+                    <div id="main" style="width: 1000px;height:600px;margin-left: -60px;margin-top: 20px"></div>
 
                 </div>
             </div>
 
 
             <!-- 热力图====为ECharts准备一个具备大小（宽高）的Dom -->
-            <div  v-show="showReview" style=" float: right" >
+            <div  v-show="showReview" style=" float: right;margin-top: 40px;margin-left: -100px" >
 
                 <a  @click="toggle2Detail" style="font-size: 15px;font-weight: bold"> 高校发明专利排名</a>&nbsp;&nbsp;<span>/</span>&nbsp;&nbsp;
                 <a href="#nowhere">高校发明专利热力图</a>
 
-                <div id="mainheat" style="width: 1000px;height:600px;">
+                <div id="mainheat" style="width: 900px;height:600px;margin-top: 20px">
 
                 </div>
             </div>
