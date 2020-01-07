@@ -12,10 +12,10 @@ public class ForePageController {
      *
      * @return
      */
-/*    @GetMapping(value = "/heat")
+    @GetMapping(value = "/heat")
     public String heat() {
         return "fore/testHeatPic";
-    }*/
+    }
 
     //刚一进入就跳转
     @GetMapping(value = "/")

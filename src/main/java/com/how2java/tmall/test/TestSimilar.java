@@ -15,7 +15,6 @@ public class TestSimilar {
         MySimHash hash1 = new MySimHash(s1, 64);
         MySimHash hash2 = new MySimHash(s2, 64);
         System.out.println( hash1.getSemblance(hash2) );
-  
     }
   
 }

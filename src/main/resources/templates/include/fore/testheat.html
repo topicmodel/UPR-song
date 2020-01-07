@@ -3,7 +3,7 @@
             $(function(){
                 var keyword = getUrlParms("keyword");
                 var data4Vue = {
-                    uri:'heatphoto',
+                    uri:'testheatphoto',
                     mapData:[]
                 };
                 //ViewModel
@@ -25,30 +25,35 @@
                                 var dom = echarts.init(document.getElementById('main'));
                                 option = {
                                     title: {
-                                        text: '高校发明专利数量热力图',
+                                        //heat map
+                                        text: 'Univ. Heat Map - Topic 10 : Data Storage',
                                         //subtext: 'data from PM25.in',
                                         left: 'center',
+
                                         textStyle: {
-                                            color: '#fff'
+                                            color: '#fff',
+                                            fontSize:32,
                                         }
                                     },
                                     backgroundColor: '#404a59',
                                     visualMap: {
-                                        min: 0,
-                                        max: 1000,
-                                        splitNumber: 10,
+                                        min: 2,
+                                        max: 10,
+                                        splitNumber: 1,
                                         inRange: {
+                                            /*color: ['#d94e5d', '#eac736', '#50a3ba'].reverse()*/
                                             color: ['#d94e5d', '#eac736', '#50a3ba'].reverse()
                                         },
                                         textStyle: {
-                                            color: '#fff'
+                                            color: '#fff',
+                                            fontSize:28,
                                         }
                                     },
                                     geo: {
                                         map: 'china',
                                         label: {
                                             emphasis: {
-                                                show: false
+                                                show: true
                                             }
                                         },
                                         roam: true,
@@ -63,7 +68,7 @@
                                         }
                                     },
                                     series: [{
-                                        name: '机构发表文献被引次数',
+                                        name: '专利数量',
                                         type: 'heatmap',
                                         coordinateSystem: 'geo',
                                         data: vue.mapData
@@ -87,7 +92,7 @@
         </script>
 
         <div id="topicSearchResult">
-            <div id="main" style="width: 1100px;height:520px;"></div>
+            <div id="main" style="width: 1100px;height: 700px"></div>
         </div>
 </div>
 </body>
